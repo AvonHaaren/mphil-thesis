@@ -99,10 +99,10 @@
 %% Using report class as base.
 %%
 %%%%%
-\PassOptionsToClass{a4paper,12pt,twoside,openright}{report}
-\DeclareOption*{\PassOptionsToClass{\CurrentOption}{report}}
+\PassOptionsToClass{a4paper,12pt,twoside,openright,chapterprefix}{scrbook}
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{scrbook}}
 \ProcessOptions\relax
-\LoadClass{report}
+\LoadClass{scrbook}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -245,6 +245,26 @@
     \onehalfspacing%
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Chapter Titles
+%%
+%%%%%
+
+% Code from http://www.komascript.de/chapterwithlines
+%\renewcommand*{\thechapter}{\Roman{chapter}}
+\newcommand*{\chapternumbersize}{\Huge}
+\renewcommand*{\chapterformat}{%
+  \raggedleft
+  \textls{\MakeUppercase{\Large\chapapp}}\enskip\chapternumbersize\thechapter\\
+  %\MakeUppercase{\Large\chapapp}\enskip\chapternumbersize\thechapter\\
+\hrulefill\\[-.25ex]
+}
+\renewcommand*{\chapterheadstartvskip}{\vskip 4\baselineskip}
+\renewcommand*{\chapterheadendvskip}{%
+  \vspace{-\baselineskip}\noindent{\setlength{\parskip}{0pt}\Huge\hrulefill\par}
+  \vspace{\baselineskip}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -265,7 +285,7 @@
 % DOCVAR: abstract (The text that will be instered into the abstract of the
 % thesis.)
 \newcommand{\@abstract}{}
-\renewcommand{\abstract}[1]{\renewcommand{\@abstract}{#1}}
+\newcommand{\abstract}[1]{\renewcommand{\@abstract}{#1}}
 
 % DOCVAR: acknowledgements (The text that will be instered into the
 % acknowledgments of the thesis.)
@@ -357,7 +377,7 @@ for the degree of Doctor of Philosophy%
 %% Date of submission and defense. (optional)
 %% Place and date of publication and publishers (and other info by them).
 %%%%%
-\newcommand{\frontmatter}{
+\renewcommand{\frontmatter}{
 
 \pagestyle{empty}
 
