@@ -1,0 +1,36 @@
+% !TEX root = ../thesis.tex
+
+
+\addtokomafont{disposition}{\rmfamily}
+
+%% Citations using numbers
+\RequirePackage[numbers,sort&compress]{natbib}
+
+
+%% Some custom packages
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{xspace}
+
+
+%% Captions: This makes captions of figures use a boldfaced small font.
+\RequirePackage[small,bf]{caption}
+
+
+%% Subfigure (note: this must be included after the `caption` package).
+\RequirePackage{subfig}
+
+
+%% Graphics (we set the central folder for all included graphics to
+%% `./Figures/`)
+%%
+\graphicspath{
+    {./Figures/}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Content commands
+%%
+
+
