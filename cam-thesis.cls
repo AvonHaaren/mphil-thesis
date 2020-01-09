@@ -121,7 +121,7 @@
 \RequirePackage{graphicx}           % Required for the UC Logo (on the title page)
 \RequirePackage{calc}               % Used for calculating margins and laying out the title page
 \RequirePackage{setspace}      	    % Used for selecting single or onehalf line spacing.
-\RequirePackage{microtype}          % Improvement of general text appearance 
+\RequirePackage{microtype}          % Improvement of general text appearance
 
 % Hyperref should be included in any case, but we make it non-obtrusive (i.e.: no hyperlink borders).
 % Why do we need a separate treatment of hyperref for the techreport? Because the guidelines say so. :)
@@ -277,6 +277,11 @@
 \newcommand{\@college}{}
 \newcommand{\college}[1]{\renewcommand{\@college}{#1}}
 
+% DOCVAR: supervisor (The name of the thesis writer's supervisor, which will appear
+% above their name.)
+\newcommand{\@supervisor}{}
+\newcommand{\supervisor}[1]{\renewcommand{\@supervisor}{#1}}
+
 % DOCVAR: keywords (These keywords will appear in the PDF meta-information
 % called `pdfkeywords`.)
 \newcommand{\@keywords}{}
@@ -301,7 +306,7 @@
 \newcommand{\@submissionnotice}{%
 \ifcam@firstyr
 First year report submitted
-\else 
+\else
 \ifcam@secondyr
 Second year report submitted
 \else
@@ -406,6 +411,17 @@ for the degree of Doctor of Philosophy%
     \end{lrbox}
 \fi
 
+%% DEPARTMENT&SUPERVISOR box
+\newsavebox{\cam@departmentsupervisor}
+\begin{lrbox}{\cam@departmentsupervisor}
+    \begin{minipage}[c][\height][c]{.98\textwidth}
+        \begin{center}
+        {\Large Department of Physics\\ Cavendish Laboratory~\\[1ex]}
+        {Supervised by \@supervisor{}}
+        \end{center}
+    \end{minipage}
+\end{lrbox}
+
 %% AUTHOR&COLLEGE box
 \newsavebox{\cam@authorcollege}
 \begin{lrbox}{\cam@authorcollege}
@@ -434,6 +450,7 @@ for the degree of Doctor of Philosophy%
 \newlength{\cam@titlepagevspace}
 \setlength{\cam@titlepagevspace}{\textheight%
 	-\totalheightof{\usebox{\cam@logo}}%
+    -\totalheightof{\usebox{\cam@departmentsupervisor}}
 	-\totalheightof{\usebox{\cam@submitnotice}}%
 	-\totalheightof{\usebox{\cam@authorcollege}}%
 	-\totalheightof{\usebox{\cam@title}}}
@@ -450,7 +467,9 @@ for the degree of Doctor of Philosophy%
 {\usebox{\cam@logo}}\\
 \vspace{.28\cam@titlepagevspace}
 {\usebox{\cam@title}}\\
-\vspace{.23\cam@titlepagevspace}
+\vspace{.28\cam@titlepagevspace}
+{\usebox{\cam@departmentsupervisor}}\\
+\vspace{.18\cam@titlepagevspace}
 {\usebox{\cam@authorcollege}}\\
 \null\vfill
 {\usebox{\cam@submitnotice}}
@@ -490,7 +509,7 @@ for the degree of Doctor of Philosophy%
 \else
 {\ifcam@firstyr
 % First and second yr report don't need the declaration
-\else 
+\else
 \ifcam@secondyr
 %
 \else
@@ -505,7 +524,7 @@ specified in the text. I further state that no substantial part of my dissertati
 already been submitted, or is being concurrently submitted, for any such degree, diploma
 or other qualification at the University of Cambridge or any other University or similar
 institution except as declared in the Preface and specified in the text.
-This dissertation does not exceed the prescribed limit of 60\,000 words.
+This dissertation does not exceed the prescribed limit of 15\,000 words.
 
 % Leaving some space for the signature:
 \vspace{15mm}
@@ -528,7 +547,7 @@ This dissertation does not exceed the prescribed limit of 60\,000 words.
 
 \ifcam@firstyr
 % First and second yr report don't need the acknowledgements
-\else 
+\else
 {\ifcam@secondyr
 %
 \else
