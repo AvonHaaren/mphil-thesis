@@ -18,47 +18,83 @@
 \input{TexContents/03Abstract}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Acknowledgements:
 %%
 \input{TexContents/04Acknowledgments}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Contents:
 %%
 \begin{document}
 \frontmatter
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Thesis body:
-%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% --------       THESIS BODY:       -------- %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \mainmatter
 \pagestyle{headings}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Introduction:
 %%
 \input{TexContents/11Introduction}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Theory:
+%%
+\input{TexContents/12Theory}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Methods:
+%%
+\input{TexContents/13Methods}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Results:
+%%
+\input{TexContents/14Results}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Future Work:
+%%
+\input{TexContents/15FutureWork}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Conclusion:
+%%
+\input{TexContents/16Conclusion}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Bibliography:
 %%
 \cleardoublepage
-\phantomsection
-\addcontentsline{toc}{chapter}{Bibliography}
-\bibliographystyle{plainnat}
-\bibliography{thesis}
+%\phantomsection
+%\addcontentsline{toc}{chapter}{Bibliography}
+%\bibliographystyle{plainnat}
+%\bibliography{thesis}
+\printbibliography[heading=bibintoc]
 
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Appendix:
 %%
 \appendix
 \input{TexContents/21Appendix}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% List of Figures + Tables:
+%%
+\listoffigures
+\listoftables
 
 \end{document}
