@@ -380,6 +380,7 @@ for the degree of Doctor of Philosophy%
 \renewcommand{\frontmatter}{
 
 \pagestyle{empty}
+\pagenumbering{roman}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
