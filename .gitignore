@@ -17,6 +17,8 @@ thesis.synctex.gz
 thesis.fls
 thesis.bcf
 thesis.run.xml
+thesis.lot
+thesis.lof
 
 /build/
 /.idea/
