@@ -31,9 +31,25 @@
 \RequirePackage{xspace}
 \RequirePackage{tocbasic}
 \RequirePackage{url}
-% \RequirePackage{todonotes}
+\setlength{\marginparwidth}{2cm}
+\RequirePackage{todonotes}
+\setuptodonotes{backgroundcolor=green!60, figwidth=0.7*\linewidth}
 \RequirePackage{csquotes}
+\RequirePackage{relsize}
+\RequirePackage{enumitem}
+\setlist[enumerate]{noitemsep}
+\setlist[itemize]{noitemsep}
+\RequirePackage{empheq}
 
+
+\RequirePackage{algorithm}
+\RequirePackage{algpseudocode}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\algnewcommand{\IfThenElse}[3]{% \IfThenElse{<if>}{<then>}{<else>}
+  \State \algorithmicif\ #1\ \algorithmicthen\ #2\ \algorithmicelse\ #3}
+\algnewcommand{\Ternary}[3]{% \Ternary{<if>}{<then>}{<else>}
+  $\{$\,(#2\ \algorithmicif\ #1)\ \algorithmicelse\ #3\,$\}$}
 
 %% SIunitX
 \RequirePackage{siunitx}
@@ -56,14 +72,14 @@
 
 
 %% Subfigure (note: this must be included after the `caption` package).
-\RequirePackage{subfig} % maybe replace with subcaption
+\RequirePackage{subcaption} % maybe replace with subcaption
 
 
 %% Graphics (we set the central folder for all included graphics to
 %% `./Figures/`)
 %%
 \graphicspath{
-    {./Figures/}
+    {./TexContents/Figures/}
 }
 
 
@@ -73,10 +89,76 @@
 \RequirePackage{booktabs}
 
 
+\RequirePackage{tikz}
+\usetikzlibrary{math}
+\usetikzlibrary{calc}
+\usetikzlibrary{intersections}
+
+\RequirePackage{scrhack}
+
+\RequirePackage[section]{placeins}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Content commands
 %%
 
 % Restart equation numbering in each section for better readability
 \numberwithin{equation}{section}
+\numberwithin{algorithm}{chapter}
 
+
+\newcommand{\dummyfig}[1]{
+  \centering
+  \fbox{
+    \begin{minipage}[c][0.33\textheight][c]{0.5\textwidth}
+      \centering{#1}
+    \end{minipage}
+  }
+}
+
+\newcommand{\insertcite}[1]{\todo[backgroundcolor=red!75]{Citation #1}}
+
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
+
+\newcommand*{\crel}{\ensuremath{c_\text{r}}\xspace}
+\newcommand*{\Vcell}{\ensuremath{V_\text{C}}\xspace}
+\newcommand*{\Dt}{\ensuremath{\Delta t}\xspace}
+\newcommand*{\Kn}{\ensuremath{\text{Kn}}\xspace}
+\newcommand*{\maxProb}{\ensuremath{(\sigma\crel)_\text{max}}\xspace}
+\newcommand*{\meanProb}{\ensuremath{\langle\sigma\crel\rangle}\xspace}
+\newcommand*{\cCOM}{\ensuremath{\vec{c}_\text{COM}}\xspace}
+\newcommand*{\Rcoll}{\ensuremath{\Gamma}\xspace}
+
+\newcommand{\Rplus}{\protect\hspace{-.1em}\protect\raisebox{.35ex}{\smaller{\smaller\textbf{+}}}}
+\newcommand{\Cpp}{\mbox{C\Rplus\Rplus}\xspace}
+
+\newcommand*{\stdvector}{\texttt{std::vector}\xspace}
+\newcommand*{\orderof}[1]{\ensuremath{\mathcal{O}(#1)}\xspace}
+\newcommand*{\PSD}{\ensuremath{\tilde{\rho}}\xspace}
+\newcommand*{\lambdadB}{\ensuremath{\lambda_\text{dB}}\xspace}
+\newcommand*{\diff}[1]{\ensuremath{\text{d}#1}\xspace}
+\newcommand*{\multidiff}[2]{\ensuremath{\text{d}^{#1}#2}\xspace}
+\newcommand*{\kB}{\ensuremath{k_\text{B}\xspace}}
+
+
+% \newcommand*{\classprop}[2]{\ensuremath{\left( #1 \! \rightarrow \! #2 \right)}\xspace}
+\newcommand*{\classprop}[2]{\ensuremath{#2_{#1}}\xspace}
+
+\makeatletter
+\newlength{\negph@wd}
+\DeclareRobustCommand{\negphantom}[1]{%
+  \ifmmode
+    \mathpalette\negph@math{#1}%
+  \else
+    \negph@do{#1}%
+  \fi
+}
+\newcommand{\negph@math}[2]{\negph@do{$\m@th#1#2$}}
+\newcommand{\negph@do}[1]{%
+  \settowidth{\negph@wd}{#1}%
+  \hspace*{-\negph@wd}%
+}
+\makeatother
+
+
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}

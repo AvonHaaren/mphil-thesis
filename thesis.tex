@@ -1,5 +1,7 @@
 \documentclass[]{cam-thesis}
 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Preamble
 %%
@@ -37,43 +39,90 @@
 \mainmatter
 \pagestyle{headings}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Introduction:
 %%
-\input{TexContents/11Introduction}
+\include{TexContents/05Introduction}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% DMD Corrections:
+%%
+\part{DMD Imaging Correction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Theory:
+%%
+\include{TexContents/11DMD-Motivation}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Theory:
 %%
-\input{TexContents/12Theory}
+\include{TexContents/12DMD-Theory}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Methods:
 %%
-\input{TexContents/13Methods}
+\include{TexContents/13DMD-Methods}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Results:
 %%
-\input{TexContents/14Results}
+\include{TexContents/14DMD-Results}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Future Work:
+%% Conclusion and Future Work:
 %%
-\input{TexContents/15FutureWork}
+\include{TexContents/15DMD-FutureWork}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Conclusion:
 %%
-\input{TexContents/16Conclusion}
+% \include{TexContents/16DMD-Conclusion}
 
+
+\addtocontents{toc}{\protect\newpage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Evaporation Simulation:
+%%
+\part{Evaporative Cooling in an Optical Box Potential}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Motivation:
+%%
+\include{TexContents/21EVA-Motivation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Theory:
+%%
+\include{TexContents/22EVA-Theory}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Implementation:
+%%
+\include{TexContents/23EVA-Implementation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Tests and Results:
+%%
+\include{TexContents/24EVA-Tests_Results}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Beam Propagation:
+%%
+% \include{TexContents/25EVA-Beam_Propagation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Conclusion:
+%%
+\include{TexContents/26EVA-Conclusion}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Bibliography:
 %%
 \cleardoublepage
@@ -84,17 +133,23 @@
 \printbibliography[heading=bibintoc]
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Appendix:
 %%
 \appendix
-\input{TexContents/21Appendix}
+\addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
+\include{TexContents/Appendix}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% List of Figures + Tables:
 %%
+
+\setcounter{tocdepth}{1}
 \listoffigures
-\listoftables
+% \listoftables
+% \listofalgorithms
+% \listoftodos
+
 
 \end{document}

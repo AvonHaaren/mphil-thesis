@@ -96,7 +96,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
-%% Using report class as base.
+%% Using book class as base.
 %%
 %%%%%
 \PassOptionsToClass{a4paper,12pt,twoside,openright,chapterprefix}{scrbook}
@@ -462,7 +462,8 @@ for the degree of Doctor of Philosophy%
 \begin{lrbox}{\cam@submitnotice}
     \begin{minipage}[c][\height][c]{.98\textwidth}
         \begin{center}
-            \@submissionnotice{}
+            % \@submissionnotice{}
+            This dissertation is submitted for the degree of Master of Philosophy
         \end{center}
     \end{minipage}
 \end{lrbox}
