@@ -1,0 +1,70 @@
+\pgfdeclarehorizontalshading{potentialhorizontal}{100bp}{%
+color(0bp)=(green);
+color(32bp)=(green);
+color(35bp)=(green!50!white);
+color(38bp)=(white);
+color(62bp)=(white);
+color(65bp)=(green!50!white);
+color(68bp)=(green);
+color(100bp)=(green)
+}
+\pgfdeclareverticalshading{potentialvertical}{100bp}{%
+color(0bp)=(green);
+color(32bp)=(green);
+color(35bp)=(green!50!white);
+color(38bp)=(white);
+color(62bp)=(white);
+color(65bp)=(green!50!white);
+color(68bp)=(green);
+color(100bp)=(green)
+}
+\begin{tikzpicture}[every text node part/.style={align=center},scale=1.1]
+    % \shade[shading=linear, top color=green, bottom color=green, middle color=white, opacity=0.2] (1.7,0.) -- (3.5,0.) -- (4,0.5) -- (3.5,1) -- (1.7,1) -- (1.7,0.0); 
+    % \shade[shading=linear, left color=green, right color=green, middle color=white, opacity=0.2] (4,0.5) -- (4.5,0.) -- (4.5,-5.2) -- (4,-5.4) -- (3.5,-5.2) -- (3.5,0.0) -- (4,0.5); 
+    \shade[shading=potentialhorizontal, opacity=0.4] (4,0.5) -- (4.5,0.) -- (4.5,-5.2) -- (4,-5.4) -- (3.5,-5.2) -- (3.5,0.0) -- (4,0.5); 
+    \shade[shading=potentialvertical, opacity=0.4] (1.7,0.) -- (3.5,0.) -- (4,0.5) -- (3.5,1) -- (1.7,1) -- (1.7,0.0);
+    \coordinate (A) at (-0.075,1.05);
+    \begin{scope}[rotate around={-33.7:(A)}]
+        \shade[top color=green, bottom color=green, middle color=green!70!black,opacity=0.4, shading angle=-33.7] (A) -- (-0.275,1.55) -- (-2,1.55) -- (-2,0.55) -- (-0.275,0.55) -- cycle;
+        % \fill[color=green,opacity=0.4] (A) -- (-0.275,1.55) -- (-2,1.55) -- (-2,0.55) -- (-0.275,0.55) -- cycle;
+    \end{scope}
+    \shade[shading=linear, left color=white, right color=white, middle color=red!80!black, opacity=0.6] (3.65,1.5) -- (4.35,1.5) -- (4.35,-2) -- (3.65,-2) -- cycle;
+    \shade[shading=linear, left color=white, right color=white, middle color=red!60, opacity=0.6] (3.65,-2) -- (4.35,-2) -- (4.35,-4.15) -- (4,-4.5) -- (3.65,-4.15) -- cycle;
+    \shade[shading=linear,top color=white, bottom color=white, middle color=red!60, opacity=0.6] (3.65,-4.15) -- (2.0,-4.15) -- (1.65,-4.5) -- (2.0,-4.85) -- (3.65,-4.85) -- (4,-4.5) -- cycle;
+    % \fill[color=green,opacity=0.2] (-0.15,-0.1) -- (-0.4,0.1) -- (-1.9,-0.9) -- (-1.4,-0.8) -- (0.4,-0.2) -- (-0.15,-0.1);
+    \draw[rounded corners,color=black,draw=green,fill=green!25] (0,0) rectangle (1.5,1) node[midway,above=0.5cm] {DMD};
+    \fill[color=white] (0.75,0.5) circle (0.3cm);
+    \draw[-latex] (0.75,-1.25) -- (0.75,0) node [midway, right] {\scriptsize Feedback};
+    \draw[rounded corners,color=black,fill=gray!20] (-0.5,-2.75) rectangle (2,-1.25) node[midway] {Computer\\ {\scriptsize (Processing)}};
+    \draw[-latex] (0.75,-4) -- (0.75,-2.75) node [midway,right] {\scriptsize Images};
+    \draw (3.5,1) -- (4.5,0);
+    \draw (4,-0.75) ellipse (1.cm and 0.2cm);
+    \draw (4,-3.25) ellipse (1cm and 0.2cm);
+    \draw (4.5,-4) -- (3.5,-5);
+    \fill[color=gray, fill opacity=0.07] (2.792893,-1.34142) -- (3.5,-1.2) -- (3.5,-2.317157) -- (2.792893,-2.458577) -- cycle; % back left
+    \fill[color=gray, fill opacity=0.07] (5.20711,-1.34142) -- (4.5,-1.2) -- (4.5,-2.317157) -- (5.20711,-2.458577) -- cycle; % back right
+    \fill[color=gray, fill opacity=0.05] (3.5,-1.2) -- (4.5,-1.2) -- (4.5,-2.317157) -- (3.5,-2.317157) -- cycle; % back wall
+    \draw[fill=gray, fill opacity=0.12] (3.5,-1.2) -- (4.5,-1.2) -- (5.20711,-1.34142) -- (5.20711,-1.54142) -- (4.5,-1.682843) -- (3.5,-1.682843) -- (2.792893,-1.54142) -- (2.792893,-1.34142) -- cycle; % top
+    \draw[fill=gray, fill opacity=0.12] (3.5,-2.317157) -- (4.5,-2.317157) -- (5.20711,-2.458577) -- (5.20711,-2.658577) -- (4.5,-2.8) -- (3.5,-2.8) -- (2.792893,-2.658577) -- (2.792893,-2.458577) -- cycle; % bottom
+    \fill[color=gray, fill opacity=0.07] (2.792893,-1.54142) -- (3.5,-1.682843) -- (3.5,-2.8) -- (2.792893,-2.658577) -- cycle; % front left
+    \fill[color=gray, fill opacity=0.07] (5.20711,-1.54142) -- (4.5,-1.682843) -- (4.5,-2.8) -- (5.20711,-2.658577) -- cycle; % front right
+    \fill[color=gray, fill opacity=0.05] (3.5,-1.682843) -- (4.5,-1.682843) -- (4.5,-2.8) -- (3.5,-2.8) -- cycle; % front
+    \draw (2.792893,-1.54142) -- (2.792893,-2.458577);
+    \draw (5.20711,-1.54142) -- (5.20711,-2.458577);
+    \draw (3.5,-1.682843) -- (3.5,-2.8);
+    \draw (4.5,-1.682843) -- (4.5,-2.8);
+    \draw[dotted,opacity=0.6] (3.5,-1.2) -- (3.5,-1.682843);
+    \draw[dotted,opacity=0.6] (4.5,-1.2) -- (4.5,-1.682843);
+    \draw[draw=none] (5.2,-2.8) -- (5.2,-1.2) node [midway,right] {\scriptsize Science Cell};
+    \draw[latex-] (5.4,-2.75) node [below right=-0.1cm] {\scriptsize Atomic Cloud} -- (4.4,-2.15);
+    % \shade[shading=radial,outer color=white,inner color=blue!30!black] (4,-2) ellipse (0.8cm and 0.24cm);
+    % \fill[path fading=cloud,inner color=blue!50!black, draw=none] (4,-2) ellipse (0.5cm and 0.24cm);
+    \fill[fill=blue!50!black,fill opacity=0.4] (4,-1.95) ellipse (0.3cm and 0.06cm);
+    \fill[path fading=north, fill=blue!50!black, fill opacity=0.4] (4,-2.05) ellipse (0.3cm and 0.06cm);
+    \draw[loosely dash dot, color=blue!50!black] (3.7,-1.95) arc (180:0:0.3cm and 0.06cm);
+    \draw[fill=blue!50!black,fill opacity=0.4,color=blue!50!black,loosely dash dot] (3.7,-1.95) arc (-180:0:0.3cm and 0.06cm) -- (4.3,-2.05) arc (0:-180:0.3cm and 0.06cm) -- cycle;
+    \draw[rounded corners,color=black,draw=red,fill=red!25] (0,-5) rectangle (1.5,-4) node[midway] {CMOS};
+    \draw[draw=red,shading=linear,left color=red!25,right color=white] (1.5,-4.2) -- (2.05,-3.9) -- (2.05,-5.1) -- (1.5,-4.8);
+    \draw[draw=none] (4,1.5) node [above] {\scriptsize Imaging Light} -- (4,-4.5);
+    \draw[draw=none] (1.7,0.5) node [right] {\scriptsize Potential Light} -- (4,0.5);
+\end{tikzpicture}

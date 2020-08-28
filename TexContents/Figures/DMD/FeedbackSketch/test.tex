@@ -1,0 +1,11 @@
+\documentclass[tikz]{standalone}
+\usetikzlibrary{shadings}
+\usetikzlibrary{fadings}
+\usetikzlibrary{arrows}
+\usetikzlibrary{shapes.multipart}
+\tikzfading[name = cloud,inner color = transparent!0,outer color = transparent!100]
+\tikzfading[name = beam, left color = transparent!100, right color = transparent!100, middle color = transparent!0]
+\tikzfading[name = beamhorizontal, top color = transparent!100, bottom color = transparent!100, middle color = transparent!0]
+\begin{document}
+\input{feedbacksketch.tikz}
+\end{document}

@@ -1,0 +1,19 @@
+\usetikzlibrary{arrows,positioning,calc,intersections}
+\begin{tikzpicture}
+    \node[anchor=south west] (Main) at (0,0) {\includegraphics[scale=0.1]{sketch}};
+    \begin{scope}[x={(Main.south east)},y={(Main.north west)}]
+        \node (CMOS) at (0.82,0.28) {CCD Camera};
+        \node (PC) at (0.835,0.74) {PC};
+        \node (DMD) at (0.36,1.01) {DMD};
+        \node (Cell) at (0.22,0.505) {Science Cell};
+        \draw[-latex] (0.84,0.33) arc (-20:10:4cm) node [midway,right=0.3cm] {Images};
+        \draw[-latex] (0.65,0.9) arc (60:90:4cm) node [midway,above=0.3cm] {Feedback};
+        \node[anchor=north] (Before) at (0.28,-0.1) {\includegraphics[scale=0.2,trim=312px 184px 312px 184px,clip]{feedbackBefore}};
+        \node[anchor=north] (After) at (0.72,-0.1) {\includegraphics[scale=0.2,trim=312px 184px 312px 184px,clip]{feedbackAfter}};
+
+        \node[above=0.2cm of Before] {Before};
+        \node[above=0.2cm of After] {After};
+        \draw[-latex] ($(Before)!0.3!(After)$) -- ($(Before)!0.7!(After)$) node [midway,above] {\parbox{3cm}{\centering Feedback\\ Correction}};
+    \end{scope}
+    
+\end{tikzpicture}

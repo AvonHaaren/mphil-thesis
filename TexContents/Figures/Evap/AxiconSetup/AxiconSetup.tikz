@@ -1,0 +1,57 @@
+\usetikzlibrary{arrows}
+\begin{tikzpicture}[scale=1.25]
+    \draw[-latex, densely dashdotted] (-2,0) -- (10,0) node [below left] {$z$};
+    \draw[-latex, densely dashdotted] (-1.5,-1.4) -- (-1.5,1.4) node [below right] {$r$};
+
+
+    \begin{scope}
+        \draw (0,1) -- (-0.15,1) node [midway, above=5pt] (A1) {\SI{10}{\degree} Axicon} -- (-0.15,-1) -- (0,-1) -- (0.3,0) -- cycle;
+    \end{scope}
+
+    \begin{scope}[xshift=1.9cm]
+        \begin{scope}
+            \begin{scope}
+                \clip (-2,5) rectangle (0,-5);
+                \draw (4.899,0) circle (5cm);
+            \end{scope}
+            \begin{scope}
+                \clip (0,5) rectangle (2,-5);
+                \draw (-4.899,0) circle (5cm);
+            \end{scope}
+            \node[below=5pt] (L) at (0,-1) {\SI{400}{mm} Lens};
+        \end{scope}
+
+
+        \begin{scope}[xshift=0.5cm]
+            \draw (0,1) -- (0.15,1) node [midway, above=5pt] (A2) {\SI{10}{\degree} Axicon} -- (0.15,-1) -- (0,-1) -- (-0.3,0) -- cycle;
+        \end{scope}
+    \end{scope}
+
+    \begin{scope}[xshift=9cm]
+        \draw (0,1) -- (0.075,1) node [midway, above=5pt] (A2) {\parbox{2cm}{\centering\SI{2}{\degree} Axicon}} -- (0.075,-1) -- (0,-1) -- (-0.15,0) -- cycle;
+    \end{scope}
+    
+    
+    % \begin{scope}[xshift=6cm,scale=1/1.1]
+    %     \begin{scope}
+    %         \clip (-2,5) rectangle (0,-5);
+    %         \draw (6,0) circle (6.1cm);
+    %     \end{scope}
+    %     \begin{scope}
+    %         \clip (0,5) rectangle (2,-5);
+    %         \draw (-6,0) circle (6.1cm);
+    %     \end{scope}
+    % \end{scope}
+
+
+    % \begin{scope}[xshift=8cm,scale=0.8]
+    %     \begin{scope}
+    %         \clip (-2,5) rectangle (0,-5);
+    %         \draw (6,0) circle (6.1cm);
+    %     \end{scope}
+    %     \begin{scope}
+    %         \clip (0,5) rectangle (2,-5);
+    %         \draw (-6,0) circle (6.1cm);
+    %     \end{scope}
+    % \end{scope}
+\end{tikzpicture}

@@ -1,0 +1,160 @@
+\usetikzlibrary{positioning,calc,arrows}
+\tikzset{myblue/.style={color=yellow!60!white, fill=none, draw, line width=1pt, inner sep=0}}
+\tikzset{mygreen/.style={color=yellow!40!red, line width=1pt, inner sep=0cm, draw, fill=none}}
+\tikzset{pixel/.style={line width=0.7pt}}
+\tikzset{pixelcircle/.style={circle, mygreen,minimum size=3.5cm,fill={rgb:red,3;yellow,2;gray,4},fill opacity=0.9}}
+\begin{tikzpicture}
+    \def\X{8}
+    \def\Y{5}
+    \def\R{5.5}
+    \node[anchor=south west, inner sep=0] (Image) at (0,0) {\includegraphics[width=9cm]{DSC_3209}};
+    \node[circle,myblue,minimum size=\R cm + 0.05cm,line width=2pt,fill=white] (b) at (\X,\Y) {};
+    \begin{scope}[x={(Image.south east)}, y={(Image.north west)}]
+        \node[circle,myblue,minimum size=10.1] (a) at (0.4163,0.5066) {};
+        \draw[rounded corners,line width = 1pt, draw=none, fill=white,fill opacity=0.8] (0.03,0.03) rectangle (0.32,0.17) node [midway,opacity=1] {DMD Screen};
+    \end{scope}
+    
+
+    \draw[myblue, line width=1pt] (a) -- (b);
+
+    
+    \begin{scope}[xshift={(\X-\R/2)*1cm},yshift={(\Y-\R/2)*1cm}, scale=\R/3]
+        \clip (1.5,1.5) circle[radius=1.5cm];
+        \foreach \y in {0,2}{
+        \foreach \x in {0,2}{
+            \fill[color=black!70] (\x,2+\y) rectangle (1+\x,1+\y) rectangle (2+\x,\y);}}
+    \end{scope}
+    \begin{scope}[xshift={(\X-\R/2)*1cm},yshift={(\Y-\R/2)*1cm}, scale=\R/96]
+        \clip (48,48) circle[radius=48cm];
+        \foreach \x in {0,1,...,96}{
+            \draw[line width=0.075pt,color=black!95] (0,\x) -- (96,\x);
+            \draw[line width=0.075pt,color=black!95] (\x,0) -- (\x,96);
+        }
+        \node[circle,mygreen,minimum size=0.15cm] (OFF) at (72.5,40.5) {};
+        \node[circle,mygreen,minimum size=0.15cm] (ON) at (45.5,48.5) {};
+    \end{scope}
+    \draw[rounded corners,line width = 1pt, draw=none, fill=white,fill opacity=0.8] (\X-1.2,\Y+0.24*\R) rectangle (\X+1.2,\Y+0.39*\R) node [midway, opacity=1] {Pixel Array};
+
+    
+
+    \node[pixelcircle] (OFFPixel) at (\X+2.35,\Y-\R/1.5) {};
+    \node[pixelcircle] (ONPixel) at (\X-0.9,\Y-\R/1.34) {};
+
+    \draw[mygreen] (ON) -- (ONPixel);
+    \draw[mygreen] (OFF) -- (OFFPixel);
+
+
+    \node[below=0.8cm] at (OFFPixel) {\small\emph{OFF} Pixel};
+    \node[below=0.8cm] at (ONPixel) {\small\emph{ON} Pixel};
+
+    \begin{scope}[xshift={(\X+2.35)*1cm},yshift={(\Y-\R/1.5-0.26)*1cm}]
+        \node (pixel_off) at (0,0.4) {\includegraphics[width=2.7cm]{off}};
+    \end{scope}
+    \begin{scope}[xshift={(\X-0.9)*1cm},yshift={(\Y-\R/1.34-0.26)*1cm}]
+        \node (pixel_off) at (0,0.4) {\includegraphics[width=2.7cm]{on}};
+    \end{scope}
+
+    % \begin{scope}[xshift={(\X+2.35)*1cm},yshift={(\Y-\R/1.5-0.26)*1cm},scale=0.7]
+    %     \coordinate (P1) at (-7cm,4cm); % left vanishing point
+    %     \coordinate (P2) at (6cm,4cm); % right vanishing point
+
+    %     %% (A1) and (A2) defines the 2 central points of the cuboid
+    %     \coordinate (A1) at (0em,0cm); % central top point
+    %     \coordinate (A2) at (0em,-0.5cm); % central bottom point 
+
+    %     %% (A3) to (A8) are computed given a unique parameter (or 2) .8
+    %     % 0 < .X < 1 -> perspective on left side
+    %     \coordinate (A3) at ($(P1)!.7!(A2)$);
+    %     \coordinate (A4) at ($(P1)!.695!(A1)$);
+
+    %     % 0 < .X < 1 -> perspective on right side
+    %     \coordinate (A7) at ($(P2)!.7!(A2)$);
+    %     \coordinate (A8) at ($(P2)!.695!(A1)$);
+
+    %     \coordinate (A5) at
+    %     (intersection cs: first line={(A8) -- (P1)},
+    %                 second line={(A4) -- (P2)});
+    %     \coordinate (A6) at
+    %     (intersection cs: first line={(A7) -- (P1)}, 
+    %                 second line={(A3) -- (P2)});
+
+        
+    %     \draw[fill=white,pixel] (A4) -- (A5) -- (A8) -- (A7) -- (A2) -- (A3) -- cycle;
+    %     \draw[pixel] (A1) -- (A2);
+    %     \draw[pixel] (A1) -- (A8);
+    %     \draw[pixel] (A1) -- (A4);
+
+    %     \coordinate (HTFake) at ($(A7)!2.4!(A8)$);
+    %     \coordinate (HBFake) at ($(A6)!1.7!(A5)$);
+    %     \coordinate (HFFake) at ($(A2)!1.7!(A1)$);
+    %     \coordinate (HT) at ($(A4)!0.98!(HTFake)$);
+    %     \coordinate (HB) at ($(A4)!0.98!(HBFake)$);
+    %     \coordinate (HF) at ($(A4)!0.98!(HFFake)$);
+    %     \shade[rounded corners=0.3,pixel,draw,top color=black!40] (A4) -- (HB) -- (HT) -- (HF) -- cycle;
+
+    %     \coordinate (Cross) at (intersection cs: first line={(A8) -- (A5)}, 
+    %     second line={(HT) -- (HF)});
+
+    %     \draw[pixel] (A8) -- (Cross);
+    %     \draw[dashed,pixel] (Cross) -- (A5);
+    %     \draw[dashed,pixel] (A5) -- (A4);
+
+    %     \draw[red, densely dashdotted,pixel, line width=1pt] ($(HB)!1.15!(HF)$) -- ($(HF)!1.15!(HB)$);
+    %     \draw[red,pixel,->] ($(A4)!0.57!(HT)$) arc (-16:212:0.32cm) node [below left=-0.5mm and -2.6mm] {$-\SI{12}{\degree}$} ;
+    %     % \draw[dotted] (HT) -- (A4);
+    % \end{scope}
+    % \begin{scope}[xshift={(\X-0.9)*1cm},yshift={(\Y-\R/1.34-0.26)*1cm},scale=0.7]
+    %     \coordinate (P1) at (-6cm,4cm); % left vanishing point
+    %     \coordinate (P2) at (7cm,4cm); % right vanishing point
+
+    %     %% (A1) and (A2) defines the 2 central points of the cuboid
+    %     \coordinate (A1) at (0em,0cm); % central top point
+    %     \coordinate (A2) at (0em,-0.5cm); % central bottom point 
+
+    %     %% (A3) to (A8) are computed given a unique parameter (or 2) .8
+    %     % 0 < .X < 1 -> perspective on left side
+    %     \coordinate (A3) at ($(P1)!.7!(A2)$);
+    %     \coordinate (A4) at ($(P1)!.695!(A1)$);
+
+    %     % 0 < .X < 1 -> perspective on right side
+    %     \coordinate (A7) at ($(P2)!.7!(A2)$);
+    %     \coordinate (A8) at ($(P2)!.695!(A1)$);
+
+    %     \coordinate (A5) at
+    %     (intersection cs: first line={(A8) -- (P1)},
+    %                 second line={(A4) -- (P2)});
+    %     \coordinate (A6) at
+    %     (intersection cs: first line={(A7) -- (P1)}, 
+    %                 second line={(A3) -- (P2)});
+
+
+
+    %     \draw[fill=white,pixel] (A4) -- (A5) -- (A8) -- (A7) -- (A2) -- (A3) -- cycle;
+    %     \draw[pixel] (A1) -- (A2);
+    %     \draw[pixel] (A1) -- (A8);
+    %     \draw[pixel] (A1) -- (A4);
+
+    %     \coordinate (HTFake) at ($(A3)!2.4!(A4)$);
+    %     \coordinate (HBFake) at ($(A6)!1.7!(A5)$);
+    %     \coordinate (HFFake) at ($(A2)!1.7!(A1)$);
+    %     \coordinate (HT) at ($(A8)!0.98!(HTFake)$);
+    %     \coordinate (HB) at ($(A8)!0.98!(HBFake)$);
+    %     \coordinate (HF) at ($(A8)!0.98!(HFFake)$);
+    %     \shade[rounded corners=0.3,pixel,draw,top color=black!40] (A8) -- (HB) -- (HT) -- (HF) -- cycle;
+
+    %     \coordinate (Cross) at (intersection cs: first line={(A4) -- (A5)}, 
+    %     second line={(HT) -- (HF)});
+
+    %     \draw[pixel] (A4) -- (Cross);
+    %     \draw[dashed,pixel] (Cross) -- (A5);
+    %     \draw[dashed,pixel] (A5) -- (A8);
+
+    %     \draw[green!65!black, densely dashdotted,pixel,line width=1pt] ($(HB)!1.15!(HF)$) -- ($(HF)!1.15!(HB)$);
+    %     \draw[green!65!black,pixel,<-] ($(HT)!0.58!(A8)$) node [below right=-1mm and -3.1mm] {$+\SI{12}{\degree}$} arc (-32:196:0.32cm);
+    %     % \draw[dotted] (HT) -- (A8);
+    % \end{scope}
+
+    
+    
+    % \draw[densely dashed,line width=0.7pt] (7.33,-1.74) -- (10,-2.5) node[right] {Hinge Axis};
+\end{tikzpicture}

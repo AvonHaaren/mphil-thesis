@@ -1,0 +1,14 @@
+\tikzset{mynode/.style={draw=black,solid,circle,fill=white,inner sep=2pt}}
+\begin{tikzpicture}
+    \node[anchor=south west, inner sep=0] (image) at (0,0,0) {\includegraphics[width=.67\textwidth,trim=0 0 0 75px,clip]{DMD/TestSetup/DSC_3218}};
+    \begin{scope}[x={(image.south east)},y={(image.north west)}]
+        \node[mynode](fibre) at (0.67,0.81){\scriptsize A};
+        \node[mynode](beamexpander1) at (0.4,0.65){\scriptsize B};
+        %\node[mynode](beamexpander2) at (0.54,0.76){B};
+        \node[mynode](dmd) at (0.77,0.68){\scriptsize C};
+        \node[mynode](beamdump) at (0.87,0.51){\scriptsize D};
+        \node[mynode](telescope1) at (0.44,0.39){\scriptsize E};
+        \node[mynode](telescope2) at (0.71,0.33){\scriptsize E};
+        \node[mynode](camera) at (0.81,0.41){\scriptsize F};
+    \end{scope}
+\end{tikzpicture}

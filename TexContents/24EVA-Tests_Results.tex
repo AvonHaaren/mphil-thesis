@@ -1,0 +1,178 @@
+% !TEX root = ../thesis.tex
+
+
+\chapter{Tests and Results}
+\label{cha:eva_tests_results}
+
+In this chapter I will first present a few benchmarks. It is important for any simulation to be able to reproduce results that are predicted by theory. For this, I will test collision rates depending on temperature and scattering length as well as the relaxation of the cloud from an initial delta velocity distribution to a Maxwell-Boltzmann distribution. 
+
+Then I am going to show how our proposed solution of a compressing box potential compares to similar setups with harmonic trapping configurations in terms of evaporation efficiency and final atom numbers.
+
+
+\section{Benchmarks}
+
+\subsection{Collision Rates}
+Our first test is if the simulation can reproduce accurate collision rates that match the theoretical predictions. For the cross section given in \eqref{eq:crosssection}, we have to take the average \meanProb to find the mean collision rate.
+\begin{align*}
+    \meanProb &= \iint \multidiff{3}{c_1} \multidiff{3}{c_2}\; \frac{8\pi a^2\crel}{1 + a^2 k^2} \times n(\vec{c}_1) n(\vec{c}_2) \\
+    &= \frac{8\pi a^2}{(2\pi m \kB T)^3}\iint \multidiff{3}{c_1} \multidiff{3}{c_2}\; \frac{\crel}{1 + a^2 k^2} \exp\!\left(-\frac{m(\vec{c}_1^2 + \vec{c}_2^2)}{2\kB T}\right) 
+    \intertext{We can now change variables to centre-of-mass and relative coordinates and integrate out the angular part}
+    &= (4\pi)^2 \frac{8\pi a^2}{(2\pi m \kB T)^3}\int_0^\infty \diff{\crel}\; \crel^2 \frac{\crel}{1 + a^2 k^2} \exp\!\left(-\frac{m\crel^2}{4\kB T}\right) \nonumber \\
+    &\phantom{=} \quad \times \int_0^\infty \diff{c_\text{COM}}\; c_\text{COM}^2 \exp\!\left(-\frac{mc_\text{COM}^2}{\kB T}\right) \\
+    &= 4\sqrt{\pi} a^2 \left(\frac{m}{\kB T}\right)^\frac{3}{2} \int_0^\infty \diff{\crel} \frac{\crel^2}{1 + a^2 \frac{m^2 \crel^2}{4\hbar^2}} \exp\!\left(-\frac{m\crel^2}{4\kB T}\right)
+    \intertext{where we have integrated out the centre-of-mass speed integral and used the relation $k = \frac{m\crel}{2\hbar}$. Making the integral dimensionless and introducing the (also dimensionless) parameter $\chi = \sqrt{\frac{\hbar^2}{a^2 m \kB T}}$ we find}
+    &= 64\sqrt{\pi} \cdot \frac{a\hbar}{m} \cdot \chi \int_0^\infty \diff{u}\; \frac{u^3}{\chi^2 + u^2} \exp(-u^2) \\
+    &= 32\sqrt{\pi} \cdot \frac{a\hbar}{m} \cdot \chi \left(1 + \chi^2\exp(\chi^2)\text{Ei}(-\chi^2)\right)
+    \intertext{where Ei is the exponential integral. Because $\chi^2$ can be much larger than 1, for calculation on a computer it is better to express this using the confluent hypergeometric function U:}
+    \meanProb &= 32\sqrt{\pi} \cdot \frac{a\hbar}{m} \cdot \chi \left(1 + \chi^2U(1,1,\chi^2)\right).
+\end{align*}
+We can now use our previous result for the mean spatial density in an arbitrary power-law trap \eqref{eq:spatial_density}, \eqref{eq:mean_density} to find the mean collision rate $\overline{\Gamma}:$
+\begin{align*}
+    \overline{\Gamma} &= \overline{n} \meanProb \\
+    &= 4\sqrt{\pi} \frac{N}{x_0y_0z_0} \cdot \frac{a\hbar}{m} \cdot \chi \left(1 + \chi^2U(1,1,\chi^2)\right) \times \prod_{i\in\{x,y,z\}}\frac{1}{\Gamma\!\left(1 + \frac{1}{\alpha_i}\right)}\left(\frac{U_i}{2 \kB T}\right)^{\frac{1}{\alpha_i}} 
+\end{align*}
+To test the accuracy of the simulation, we test this for different scattering lengths and temperatures. We choose a (near) box potential with $\alpha_x = \alpha_y = \alpha_z = 1000$, side lengths of \SI{1}{mm} in all directions and a potential depth of $U_0 = \SI{e-26}{J} \sim \SI{725}{\micro\kelvin}$. The atomic mass is set to \SI{87}{u}. We start each of the simulations with \num{4e8} atoms in a $(\num{0.995} \times \num{0.995} \times \num{0.995})\; \si{\milli\meter\cubed}$ cube with uniform density distribution, let them reach a steady state by waiting for 3 initial mean collision times and then let the simulation continue until 100 initial mean collision times have been completed.
+
+The statistic weight is \num{32768}, leading to \num{12207} simulated particles. The timestep is 1/50 of the mean collision time and for this test, the loss coefficients $K_{1,2,3}$ are all set to 0. The results are shown in Figure~\ref{fig:evap_test_rates} and the measured rates fit the prediction very well. 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[]{Evap/CollisionRates}
+    \caption{Collision rate variation with temperature and scattering length}
+    \label{fig:evap_test_rates}
+\end{figure}
+Over all conducted tests, the maximum deviation of the measured from the theoretically predicted rate was \SI{.784}{\percent}, with an average of just \SI{.414}{\percent}.
+
+\subsection{Thermal Relaxation}
+Next, we initialise a cloud of \num{3e8} atoms in the same potential as before and with a scattering length of $a = 100a_0$. The kinetic temperature is $T=\SI{20}{\micro\kelvin}$, but every particle is given the same speed initially. We record the speeds of every particle present for 10 initial mean collision times $\overline{\tau}_0$ and average the resulting speed distribution over 50 separate runs. The results are shown in Figure~\ref{fig:evap_relaxation}. After $\num{8.5}\overline{\tau}_0$, the resulting speed distribution matches the expected Maxwell-Boltzmann distribution.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[]{Evap/Relaxation}
+    \caption{Relaxation to a Maxwell-Boltzmann distribution}
+    \label{fig:evap_relaxation}
+\end{figure}
+
+% \subsection{Internal Energy per Atom}
+% Our last test analyses the energy per particle. From the theoretical analysis, we expect \[\tilde{E} = \xi kB T, \quad \xi = \frac{3}{2} + \frac{1}{\alpha_x} + \frac{1}{\alpha_y} + \frac{1}{\alpha_z}\] per particle in a power-law potential with exponents $\alpha_{x,y,z}$.
+% We let \[\alpha_x = \alpha_y = \alpha_z \equiv \alpha,\quad 1 \leq \alpha \leq 100.\] The starting conditions are: \todo[inline]{atom number, density, temperature} and we let the system reach equlibrium in \dots initial mean collision times, before we measure the energy per particle. The results of this can be seen in Figure~\todo{ref}. Again, we see excellent agreement with the theoretical prediction.
+
+
+\section{Efficient Evaporation in a Box}
+We now move on to test the proposed evaporation in a box potential. The simulation is partly based on the assumption that the atoms have been cooled to a high starting phase space density before the evaporative sequence. This goes hand in hand with our initial concept for evaporation in a box. Usually, atoms are pre-cooled before evaporative cooling in an optical dipole trap is carried out. It has been shown that $\Lambda$ enhanced gray molasses cooling is possible on the $D_2$ line of $^{87}$Rb \cite{Rosi2018enhancedGM}. Here, a final phase space density of \num{4e-6} was achieved at a temperature of \SI{4}{\micro\kelvin}, corresponding to a density of \SI{4.9e9}{\per\centi\meter}. Starting from a density this low would be disadvantageous for evaporative cooling as it would incur high thermalisation times. Compressing the cloud however would heat the atoms again. Gray molasses cooling is mainly limited by time as the cloud can expand freely and is subject to gravity. With our proposed concept of a box potential, the cloud would not be able to expand indefinetely, given that the trap depth is high enough to contain the falling atoms. We could then repeatedly compress the gas and cool it again. In 2005, such an alternating cycle of compression and cooling was already demonstrated with $^{85}$Rb using a near-resonant dark optical lattice, leading to a density of \SI{1.2e12}{\per\centi\meter} with a temperature of \SI{10}{\micro\kelvin}, equivalent to a phase space density of \num{2.6e-4} \cite{PhysRevA.72.043410}. 
+
+For the simulation, we use a box potential created from two ring beams that intersect each other at an angle. 
+\begin{equation*}
+    U(\vec{r}) = U_0 \left[ \left( \frac{\sqrt{(-\sin(\frac{\alpha}{2})x + \cos(\frac{\alpha}{2})y)^2 + z^2}}{R} \right) ^ P + \left( \frac{\sqrt{(\sin(\frac{\alpha}{2})x + \cos(\frac{\alpha}{2})y)^2 + z^2}}{R} \right) ^ P \right]
+\end{equation*}
+where $\alpha$ is the angle between the beams, $R$ is the radius of the ring and the power $P$ is given by $P = \num{87}$. This specific value was chosen following the results of Hueck et al.~\cite{PhysRevLett.120.060402}, where it was demonstrated that a ring beam made by using an axicon can be focused to achieve a power law potential with a similar exponent. 
+Figure~\ref{fig:steinmetz_solid} shows the outline of the potential for the angles $\alpha=\SI{90}{\degree}$ and $\alpha=\SI{157.5}{\degree}$. The latter case is the configuration that will be used in the experiment.
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{.49\textwidth}
+        \centering
+        \includegraphics[trim=0 1.7ex 0 6ex,clip]{Evap/SteinMetzPython}
+        \caption{\SI{90}{\degree}}
+    \end{subfigure}
+    \begin{subfigure}[b]{.49\textwidth}
+        \centering
+        \includegraphics[trim=0 1.7ex 0 6ex,clip]{Evap/SteinMetzPython_Angle}
+        \caption{\SI{157.5}{\degree}}
+    \end{subfigure}
+    \caption{Common volume of two crossed cylinders}
+    \label{fig:steinmetz_solid}
+\end{figure}
+
+\subsubsection*{Parameter Optimisation}
+For all cases, we use a simple optimisation scheme. 
+The initial beam radius is fixed to \SI{360}{\micro\meter} and the initial trap depth is given by $\SI{50}{\micro\kelvin}\times \kB$. We then employ only one exponential ramp for the beam radius and the potential depth where we compress the beam to a final radius of \SI{25}{\micro\meter} and a final trap depth of $\SI{450}{\nano\kelvin}\times \kB$:
+\begin{equation*}
+    X(t) = \frac{X_1 - X_0}{e^{-t_\text{d}/\tau} - 1} \times \left(e^{-t/\tau} - 1\right) + X_0
+\end{equation*}
+Here, $X$ is the parameter to which the ramp is applied, $X_{0,1}$ are the initial and final values before and after the ramp, $t_\text{d}$ is the duration of the ramp and $\tau$ is the exponential time constant.
+After an initial coarse search of the available parameter space for $t_\text{d}$ and $\tau$ for both parameters, we choose the values that yield the highest possible evaporation efficiency
+\[
+    \gamma = -\frac{\log(\tilde{\rho}_\text{f}/\tilde{\rho}_\text{i})}{\log(N_\text{f}/N_\text{i})}
+\]
+with the initial and final values for the phase space density and atom number. Then we go on to vary all three parameters in a smaller range around the previous optimum and try to find an improvement. 
+
+If a phase space density of $\PSD = 1$ is reached, the simulation is stopped prematurely because it is purely classical and results at higher phase space densities are not valid anymore. 
+
+\subsubsection*{Starting Conditions}
+We simulate different initial phase space densities ranging from \num{5e-6} to \num{1e-3} with atom numbers from \num{2e8} to \num{3e7} as well as temperatures from \SI{10}{\micro\kelvin} down to \SI{2.5}{\micro\kelvin} for the highest phase space density. We initialise the particles with a harmonic density distribution, where the RMS radius can be calculated from the peak phase space density, the atom number and the temperature.
+This gives us a range of estimates on how effective this cooling method could be for different starting conditions and we will be able to tell how much pre-cooling is necessary for good results.
+The cases with their respective fixed parameters are shown in Table~\ref{tab:evap_cases}.
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{cS[table-format=+1.1e-1]S[table-format=+1.1e+1]S[table-format=+2.1]S[table-format=+3]S[table-format=+1.1e+2]}
+        \toprule
+        \# & \multicolumn{1}{c}{$\PSD_0$} & \multicolumn{1}{c}{$N_0$} & \multicolumn{1}{c}{$T_0$ / \si{\micro\kelvin}} & \multicolumn{1}{c}{$\sigma_0$ / \si{\micro\meter}} & \multicolumn{1}{c}{$n_0$ / \si[per-mode=reciprocal]{\per\meter\cubed}}\\
+        \midrule
+        1  & 5.0e-6 & 2.0e8 & 10  & 809 & 2.4e16 \\
+        2  & 1.9e-5 & 1.2e8 & 7.1 & 528 & 5.4e16 \\
+        3  & 7.1e-5 & 7.7e7 & 5   & 345 & 1.2e17 \\
+        4  & 2.7e-4 & 4.8e7 & 3.5 & 225 & 2.7e17 \\
+        5  & 1.0e-3 & 3.0e7 & 2.5 & 147 & 6.0e17 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Initial parameters for the simulated cases. $\sigma_0$ is the RMS radius of the initial cloud and $n_0$ is the peak density. $\PSD_0$ also is the peak value.}
+    \label{tab:evap_cases}
+\end{table}
+% We simulate two different scenarios for both angles: In the first scenario, we assume that the cycling scheme of compression and cooling works. In that case, we start at a phase space density of \todo{number} and a temperature of \todo{number}, corresponding to a density of \todo{number}. Our initial beam radius is given by \todo{number}, so we start with \todo{number} atoms.
+
+% In the second scenario, we do not assume such a great amount of pre-cooling, so we instead start with a phase space density of only \todo{number} at a temperature of \todo{number}, corresponding to the results of \cite{Rosi2018enhancedGM}. At the same initial beam radius, this gives us an initial atom number of \todo{number}.
+In all cases, we assume a trap lifetime of \SI{1}{min} (giving $K_1 = \SI{.017}{\per\second}$), no two-body losses and no influence of gravity. This can be achieved with a sample prepared in the absolute ground state of $^{87}$Rb where gravity is compensated by a linear magnetic field. The three body loss coefficient is taken from \cite{threebody} as $K_3 = \SI{1.8e-41}{m^6\per\second}$. At densities below \SI{e19}{\per\meter\cubed}, three body losses are negligible compared to the losses due to background collisions.
+
+\subsubsection*{Findings}
+In case 1, the initial density is so low that only a small fraction of the initial atom number can actually be captured in the box. Furthermore, this lower density results in a smaller collision rate and the compression is not fully able to compensate for this. We can achieve efficiencies $\gamma > 2$ only by making the evaporation ramp \SI{30}{s} long. Still, the final phase space density is $\PSD_\text{f}\ll 1$ and less than \num{200000} atoms remain in the trap after the ramp. We can conclude from this that either larger initial trapping beams would be necessary or a higher initial density.
+
+At initial phase space densities $\PSD_\text{i}>\num{1e-5}$ and higher, the situation improves drastically and efficiencies close to or above 3 can be achieved. However, this comes again at the expense of long ramp durations.
+The results for all five cases are listed in Table~\ref{tab:evap_results} and Figure~\ref{fig:evap_comparison}\footnote{\textbf{Note:} The results are given as peak phase space densities for non box potentials.} shows a comparison of the cases 2--5 against various results from other research groups. 
+%
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{cS[table-format=+1.1e+1]S[table-format=+1.1e+1]S[table-format=+1.1e-1]S[table-format=+1.3]S[table-format=2.1]S[table-format=3]S[table-format=1.2]}
+        \toprule
+        \# & \multicolumn{1}{c}{$N_\text{i}$} & \multicolumn{1}{c}{$N_\text{f}$} & \multicolumn{1}{c}{$\PSD_\text{i}$} & \multicolumn{1}{c}{$\PSD_\text{f}$} & \multicolumn{1}{c}{$T_\text{i}$ / \si{\micro\kelvin}} & \multicolumn{1}{c}{$T_\text{f}$ / \si{\nano\kelvin}} & \multicolumn{1}{c}{$\gamma$} \\
+        \midrule
+        1  & 1.1e7 & 1.3e5 & 3.7e-6 & 0.059  & 10 & 152 & 2.17 \\
+        2  & 1.9e7 & 5.5e5 & 1.2e-5 & 0.29 & 7.0 & 137 & 2.83 \\
+        3  & 2.8e7 & 1.3e6 & 3.9e-5 & 0.83 & 5.0 & 185 & 3.20 \\
+        4  & 3.3e7 & 2.0e6 & 1.2e-4 & 1    & 3.6 & 144 & 3.25 \\
+        5  & 2.8e7 & 2.3e6 & 3.4e-4 & 1    & 2.5 & 160 & 3.21 \\
+        \bottomrule
+    \end{tabular}
+    \newline
+    \vspace{3ex}
+    \newline
+    \begin{tabular}{cS[table-format=+2.0]S[table-format=+1.1]S[table-format=2.1]}
+        \toprule
+        \# & \multicolumn{1}{c}{$t_\text{d}$ / s} & \multicolumn{1}{c}{$\tau_\text{radius}$ / s} & \multicolumn{1}{c}{$\tau_\text{depth}$ / s} \\
+        \midrule
+        1  & 30 & 4 & 30 \\
+        2  & 16 & 1.6 & 15 \\
+        3  & 14 & 1.4 & 13 \\
+        4  & 9 & 0.9 & 8.5 \\
+        5  & 7 & 0.7 & 6.5 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Results and optimised parameters for the simulated cases}
+    \label{tab:evap_results}
+\end{table}
+%
+\begin{figure}[htbp]
+    \centering
+    \input{TexContents/Figures/Evap/Comparison.pgf}
+    \caption[Comparison of the simulation results against other papers]{Comparison of the simulation results against other papers. Green circles are results from optical traps, the blue square is from a portable magnetic trap setup and the turquoise diamond is from a hybrid trap. The atom numbers in the bottom left figure are projections from the initial atom number and the average efficiency.}
+    \label{fig:evap_comparison}
+\end{figure}
+%
+Here we can see that our achieved efficiency is very good and in the cases 4 and 5 a large portion of the atoms remains in the trap at a phase space density of $\PSD = 1$. We also find that the achieved efficiency is very dependent on the initial atom number. This is expected as the initial atom number determines how strong the compression needs to be to achieve high densities and in turn high collision rates.
+
+Lastly, we show the optimised trajectory for case 5 in Figure~\ref{fig:evap_trajectory}.
+%
+\begin{figure}[htbp]
+    \centering
+    \includegraphics{Evap/Trajectory}
+    \caption{Evaporation trajectory for case 5}
+    \label{fig:evap_trajectory}
+\end{figure}
+Here we can see that during the first second of compression, no evaporation takes place which is apparent by the relatively constant atom number and phase space density. Starting at a lower trap depth might reduce the total time necessary to reach $\PSD = 1$.

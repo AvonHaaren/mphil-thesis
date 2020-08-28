@@ -1,0 +1,54 @@
+\usetikzlibrary{positioning,calc,math,arrows}
+\tikzset{mynode/.style={rectangle,rounded corners,draw=gray,inner sep=9pt,line width=0.6pt}}
+\tikzset{arr/.style={-latex,color=green!25!gray}}
+\begin{tikzpicture}
+    \node[] (start) at (0,0) {Start};
+    \tikzmath{\D=0.5;}
+    \node[mynode,below=\D cm of start] (init) {\parbox{2.6cm}{\centering Initialisation {\footnotesize {Particle creation}}}};
+
+    \node[mynode,below=\D cm of init] (move) {\parbox{3.5cm}{\centering Move particles {\footnotesize {Energy Conversation}}}};
+
+    \node[mynode,below=\D cm of move] (bound) {\parbox{3.8cm}{\centering Boundary conditions}};% {\footnotesize {Evaporation}}}};
+
+    % \node[mynode,below=\D cm of move] (update) {\parbox{3cm}{\centering Parameter updates {\footnotesize {Potentials etc.}}}};
+
+    % \node[mynode,below=\D cm of update] (index) {\footnotesize Cell Indexing};
+    % \node[mynode,below=-0.15cm of index,fill=white] (losses) {Inelastic losses};
+
+    \node[mynode,below=\D cm of bound] (index2) {\footnotesize Cell Indexing};
+    \node[mynode,below=-0.15cm of index2,fill=white] (coll) {\parbox{3.5cm}{\centering Collision sampling {\footnotesize {Calculate new timestep}}}};
+
+    \node[mynode,below=\D cm of coll] (output) {\parbox{3.1cm}{\centering Output physical properties}}; %{\footnotesize {$V,T,\tilde{\rho}$ \dots}}}};
+
+    \node[mynode,below=\D cm of output] (stop) {\parbox{4.25cm}{\centering Stop condition reached?\\ {\footnotesize {$t > t_\text{end}$?}}}}; % or $\tilde{\rho} > 1$\\ or $N < N_\text{threshold}$}}}};
+
+    \node[below=3*\D cm of stop] (finish) {\parbox{2.2cm}{\centering {\footnotesize {Give summary}} Finish}};
+
+    \foreach \start/\end in {%
+        start/init,%
+        init/move,%
+        move/bound,%
+        bound/index2,%
+        %bound/update,%
+        %update/index,%
+        %losses/index2,%
+        coll/output,%
+        output/stop%
+    }
+    {
+        \draw[arr] (\start) -- (\end);
+    }
+
+    \draw[arr] (stop) -- (finish) node [midway,right,color=black] {\scriptsize Yes};
+
+    \coordinate[left=2.5cm of stop] (P1);
+    \coordinate[left=2.5cm of move] (P2);
+
+    \draw[arr] (stop) .. controls (P1) and (P2) .. (move);
+
+    \coordinate[right=2.5cm of stop] (P3);
+    \coordinate[right=2.5cm of move] (P4);
+
+    \draw[arr,opacity=0] (stop) .. controls (P3) and (P4) .. (move);
+    \node[left=0.5cm of stop] {\scriptsize No};
+\end{tikzpicture}

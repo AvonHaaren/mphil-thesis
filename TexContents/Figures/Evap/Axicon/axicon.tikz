@@ -1,0 +1,21 @@
+\usetikzlibrary{positioning,calc}
+\tikzset{beam/.style={color=red!70!black}}
+\begin{tikzpicture}[scale=2.5]
+    \coordinate (T) at (0,0.5);
+    \coordinate (B) at (0,-0.5);
+    \coordinate (Tip) at (0.185,0);
+    \draw (T) -- (B) -- (Tip) -- cycle;
+    \draw[-latex,dashdotted] (-0.5,0) -- (4.5,0) node[right] {$z$};
+    \draw[-latex] (0,-0.5) -- (0,0.6) node [above] {$r$};
+    \draw (0,-0.8) arc (-90:-110:0.3);
+    \draw[densely dotted] (B) -- ($(Tip)!1.57!(B)$);
+    \draw[densely dotted] (B) -- (0,-0.8) node [midway,right] {$\alpha$};
+    \foreach \y in {0.01,0.02,0.0325,0.045,0.065,0.085,0.115,0.145}
+    \foreach \M in {1,-1}
+    {
+        \coordinate (IS) at (intersection cs: first line={(-0.5,\y*\M) -- (2,\y*\M)},second line={(0,\M) -- (Tip)});
+        \coordinate (IS1) at ($(IS) + (4,-\M*4*0.176)$);
+        \coordinate (IS2) at (intersection cs: first line={(IS) -- (IS1)}, second line={(4,-1) -- (4,1)});
+        \draw[beam] (-0.5,\y*\M) -- (IS) -- (IS2);
+    }
+\end{tikzpicture}

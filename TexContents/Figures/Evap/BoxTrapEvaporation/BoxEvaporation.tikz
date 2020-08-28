@@ -1,0 +1,13 @@
+\usetikzlibrary{arrows,positioning}
+\tikzset{atom/.style={circle,draw,fill,color={rgb:red,74;blue,14;green,14},fill opacity=0.4,inner sep=0,minimum size=4pt,line width=1pt, draw opacity=0.75}}
+\begin{tikzpicture}
+    \node[anchor=south west] (image) at (0,0) {\includegraphics{Evap/BoxTrapEvaporation/baseplot}};
+    \begin{scope}[x={(image.south east)},y={(image.north west)}]
+        \node[anchor=north west] (large) at (0.1,0.95) {\includegraphics{Evap/BoxTrapEvaporation/Large}};
+        \node[anchor=north east] (small) at (0.97,0.95) {\includegraphics{Evap/BoxTrapEvaporation/Small}};
+        \draw[-latex] (0.24,0.79) arc (30:110:1cm) node[below left=0.02cm and 0.13cm,atom] (A){};
+        \draw[-latex] (0.44,0.8) arc (150:70:1cm) node[below right=0.015cm and 0.13cm,atom] (B){};
+        \draw[-latex] (0.44,0.57) arc (70:-10:1cm) node[below right=0.134cm and -0.1cm,atom] (C){};
+        \draw[-latex,thick] (0.5,0.66) -- (0.63,0.66);
+    \end{scope}
+\end{tikzpicture}
