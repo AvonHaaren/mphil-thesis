@@ -4,12 +4,13 @@
 \chapter{Appendix}
 \section{DMD}
 \subsection{Theory -- Floyd-Steinberg Dithering}
+\vfill
 \begin{algorithm}
     \caption{The Floyd-Steinberg Dithering Algorithm}
     \label{alg:floyd_steinberg}
     %
     \begin{algorithmic}[1]
-        \Require A grayscale (0 to 1) image with dimensions $X \times Y$
+        \Require A greyscale (0 to 1) image with dimensions $X \times Y$
         \Ensure A binary (black and white) image with the same dimensions
         \Procedure{FloydSteinberg}{Image}
         \ForAll {$0 \leq j < Y$}
@@ -26,99 +27,27 @@
         \EndProcedure
     \end{algorithmic}
 \end{algorithm}
-
-% \newpage
-% \subsection*{Methods -- Algorithms}
-% \begin{algorithm}
-%     \caption{Point Detection Algorithm for Camera Calibration}
-%     \label{alg:dmd_point_detection}
-%     %
-%     \begin{algorithmic}[1]
-%         \Require {A camera image (width $X$, height $Y$) of a point grid}
-%         \Ensure {A list of the detected points}
-%         %
-%         \Procedure{PointDetect}{Cam}
-%         \State List $\gets\{\}$
-%         \ForAll {$0 \leq j < Y$}
-%         \ForAll {$0 \leq i < X$}
-%         \If {Cam[$i,j$] $> I_\text{threshold}$}
-%         \State max $\gets 0$
-%         \State $\{i_\text{max}, j_\text{max}\} \gets \{i,j\}$
-%         \For {$j - 5 \leq l \leq j + 5$}
-%         \For {$i - 5 \leq k \leq i + 5$}
-%         \If {Cam[$k,l$] $>$ max}
-%         \State max $\gets$ Cam[$k,l$]
-%         \State $\{i_\text{max}, j_\text{max}\} \gets \{k,l\}$
-%         \EndIf
-%         \EndFor
-%         \EndFor
-%         \State $\{x,y\}\gets\{0,0\}$
-%         \State Avg $\gets 0$
-%         \For {$j_\text{max} - 5 \leq l \leq j_\text{max} + 5$}
-%         \For {$i_\text{max} - 5 \leq k \leq i_\text{max} + 5$}
-%         \State Avg $\gets$ Avg $+$ Cam[$k,l$]
-%         \State $\{x,y\}\gets \{x,y\} + \text{Cam}[k,l] \times \{k,l\}$
-%         \State Cam[$k,l$] $\gets 0$
-%         \EndFor
-%         \EndFor
-%         \State List $\gets \{x/ \text{Avg},y/ \text{Avg}\}$
-%         \EndIf
-%         \EndFor
-%         \EndFor
-%         \EndProcedure
-%     \end{algorithmic}
-% \end{algorithm}
-% \pagebreak
-% \begin{algorithm}
-%     \caption{Algorithm used to map the camera image to DMD coordinates}
-%     \label{alg:dmd_mapping}
-%     %
-%     \begin{algorithmic}[1]
-%         \Require A camera image
-%         \Ensure The mapped image that now has the same dimensions as the DMD ($X\times Y$ pixels)
-%         \Procedure{MapCamera}{CameraImage}
-%         \ForAll {$0 \leq j < Y$}
-%         \ForAll {$0 \leq i < X$}
-%         \State $\{x,y\} \gets \Call{Map}{i,j}$ \Comment{The mapped coordinates, floating point}
-%         \State $\{\tilde{x},\tilde{y}\} \gets \{\floor{x},\floor{y}\}$ \Comment{Integer coordinates}
-%         \State WeightSum $\gets 0$
-%         \State $I \gets 0$ \Comment{Weighted sum of the intensities}
-%         \For {$a\in\{0,1\}$} \For {$b\in\{0,1\}$}
-%         \State Weight $\gets 1/\sqrt{(x-(\tilde{x} + a))^2 + (y-(\tilde{y} + b))^2}$
-%         \State WeightSum $\gets$ WeightSum $+$ Weight
-%         \State $I \gets I + \text{Weight}\cdot\text{CameraImage}[\tilde{x} + a, \tilde{y} + b]$
-%         \EndFor \EndFor
-%         \State MappedImage[$i,j$] $\gets I / \text{WeightSum}$ 
-%         \EndFor
-%         \EndFor
-%         \EndProcedure
-%     \end{algorithmic}
-% \end{algorithm}
-
-\iffalse
-\pagebreak
-\subsection{Results -- Gaussian Peak as Artificial Deviation}
 \vfill
-\begin{minipage}{\linewidth}
-    \centering
-    \includegraphics[]{DMD/Results/IntensityCut}
-    \captionof{figure}[Horizontal cuts at the centre through the resulting images with fits]{Horizontal cuts at the centre through the resulting images with fits. From the image data, only every tenth value is plotted for better visibility. $A_0$ is the amplitude of the gaussian peak that has been added as a deviation.}
-    \label{fig:dmd_results_gaussian_cuts}
-\end{minipage}
-\vfill
-\fi
 
 \pagebreak
 \subsection{Results -- Sinusoidal Fringes as Artificial Deviation}
 \vfill
 \begin{minipage}{\linewidth}
     \centering
-    \includegraphics[]{DMD/Results/LengthScale}
-    \captionof{figure}[Sinusoidal modulation pattern images with fits]{Sinusoidal modulation pattern images with fits. From the image data, only every fifth value is plotted for better visibility. $\lambda_0$ is the period of the wave that has been added as a deviation. The offset in intensity is a result of a wrong setting for the edge detection radius, which had been set to only $r=\SI{7}{px}$.}
-    \label{fig:dmd_results_resolution_cuts}
+    \includegraphics[]{DMD/Results/LengthScaleOld}
+    \captionof{figure}[Sinusoidal modulation pattern images with fits]{From the image data, only every fifth value is plotted for better visibility. $\lambda_0$ is the period of the sinusoidal pattern that has been added as a deviation. The offset in intensity is a result of a wrong setting for the edge detection range, which had been set to only $r=\SI{7}{px}$.}
+    \label{fig:dmd_results_resolution_cuts_old}
 \end{minipage}
 \vfill
 \pagebreak
+
+\noindent\begin{minipage}[c][\textheight][c]{\linewidth}
+    \centering
+    \includegraphics[]{DMD/Results/LengthScale}
+    \captionof{figure}[Sinusoidal modulation pattern images with fits]{From the image data, only every fifth value is plotted for better visibility. $\lambda_0$ is the period of the sinusoidal pattern that has been added as a deviation. The offset in intensity is a result of a wrong setting for the edge detection range, which had been set to only $r=\SI{7}{px}$.}
+    \label{fig:dmd_results_resolution_cuts}
+\end{minipage}
+% \pagebreak
 
 
 
@@ -138,11 +67,18 @@ where $V^*(E)$ is the volume where $U(\vec{r}) < E$. Because the potential is sy
     I(E) = 8\int_0^{\tilde{x}} \int_0^{\tilde{y}} \int_0^{\tilde{z}} \diff{z} \diff{y} \diff{x} \sqrt{E - U_x \left(\frac{x}{x_0}\right)^{\alpha_x} - U_y \left(\frac{y}{y_0}\right)^{\alpha_y} - U_z \left(\frac{z}{z_0}\right)^{\alpha_z}}
 \end{equation*}
 with
-\begin{align*}
-    \tilde{x} &= x_0 \left(\frac{E}{U_x}\right)^{\frac{1}{\alpha_x}}, \\ 
-    \tilde{y} &= y_0 \left(\frac{E - U_x\left(\frac{x}{x_0}\right)^{\alpha_x}}{U_y}\right)^{\frac{1}{\alpha_y}}, \\ 
-    \tilde{z} &= z_0 \left(\frac{E - U_x\left(\frac{x}{x_0}\right)^{\alpha_x} - U_y\left(\frac{y}{y_0}\right)^{\alpha_y} }{U_z}\right)^{\frac{1}{\alpha_z}} 
-\end{align*}
+% \begin{align*}
+%     \tilde{x} &= x_0 \left(\frac{E}{U_x}\right)^{\frac{1}{\alpha_x}}, \\ 
+%     \tilde{y} &= y_0 \left(\frac{E - U_x\left(\frac{x}{x_0}\right)^{\alpha_x}}{U_y}\right)^{\frac{1}{\alpha_y}}, \\ 
+%     \tilde{z} &= z_0 \left(\frac{E - U_x\left(\frac{x}{x_0}\right)^{\alpha_x} - U_y\left(\frac{y}{y_0}\right)^{\alpha_y} }{U_z}\right)^{\frac{1}{\alpha_z}}. 
+% \end{align*}
+\begin{equation*}
+    \tilde{x} = x_0 \left(\frac{E}{U_x}\right)^{\frac{1}{\alpha_x}},
+    \,\, 
+    \tilde{y} = y_0 \left(\frac{E - U_x\left(\frac{x}{x_0}\right)^{\alpha_x}}{U_y}\right)^{\frac{1}{\alpha_y}},
+    \,\,
+    \tilde{z} = z_0 \left(\frac{E - U_x\left(\frac{x}{x_0}\right)^{\alpha_x} - U_y\left(\frac{y}{y_0}\right)^{\alpha_y} }{U_z}\right)^{\frac{1}{\alpha_z}}. 
+\end{equation*}
 We will substitute variables twice, in order not to skip too many substeps. First we substitute
 \begin{equation*}
     \zeta^{\alpha_x} = U_z \left(\frac{z}{z_0}\right)^{\alpha_z}, \quad \xi^{\alpha_y} = U_y \left(\frac{y}{y_0}\right)^{\alpha_y}, \quad
@@ -169,7 +105,7 @@ The integral
 \[
     \int_0^1 \diff{\tau} \left(1 - \tau^a\right)^b 
 \]
-can be related to the beta function $\text{B}(x,y)$ by substituting $t = \tau^a$
+can be related to the beta function $\text{B}(x,y)$ \cite[Eq.~5.12.1]{NIST:DLMF} by substituting $t = \tau^a$
 \begin{equation*}
     \int_0^1 \diff{\tau} \left(1 - \tau^a\right)^b = \frac{1}{a} \int_0^1 \diff{t}\, t^{\frac{1}{a} - 1} \left(1 - t\right)^{(b + 1) - 1} =\frac{1}{a} \text{B}\!\left(\frac{1}{a}, b + 1\right).
 \end{equation*}
@@ -188,18 +124,18 @@ We can simplify this even further by using the relation of the Beta function to 
     &\equiv \frac{\sqrt{\pi}}{2} \times \frac{F(\alpha_x,\alpha_y,\alpha_z)}{\Gamma(\xi)}
 \end{align*}
 where
-\begin{align*}
-    F(\alpha_x,\alpha_y,\alpha_z) &= \Gamma\!\left(1 + \frac{1}{\alpha_x}\right) \Gamma\!\left(1 + \frac{1}{\alpha_y}\right) \Gamma\!\left(1 + \frac{1}{\alpha_z}\right) 
-    \intertext{and} 
-    \xi &= \frac{3}{2} + \frac{1}{\alpha_x} + \frac{1}{\alpha_y} + \frac{1}{\alpha_z}.
-\end{align*}
+\begin{equation*}
+    F(\alpha_x,\alpha_y,\alpha_z) = \Gamma\!\left(1 + \frac{1}{\alpha_x}\right) \Gamma\!\left(1 + \frac{1}{\alpha_y}\right) \Gamma\!\left(1 + \frac{1}{\alpha_z}\right),
+    \quad
+    \xi = \frac{3}{2} + \frac{1}{\alpha_x} + \frac{1}{\alpha_y} + \frac{1}{\alpha_z}.
+\end{equation*}
 So finally, the complete density of states is given by
 \begin{equation*}
-    D(E) = \left(\frac{2m}{\pi\hbar^2}\right)^\frac{3}{2} \frac{x_0 y_0 z_0}{U_x^{1/\alpha_x} U_y^{1/\alpha_y} U_z^{1/\alpha_z}} \frac{F(\alpha_x,\alpha_y,\alpha_z)}{\Gamma(\xi)} \times E^{\xi - 1}
+    D(E) = \left(\frac{2m}{\pi\hbar^2}\right)^\frac{3}{2} \frac{x_0 y_0 z_0}{U_x^{1/\alpha_x} U_y^{1/\alpha_y} U_z^{1/\alpha_z}} \frac{F(\alpha_x,\alpha_y,\alpha_z)}{\Gamma(\xi)} \times E^{\xi - 1}.
 \end{equation*}
 
-\pagebreak
-\subsection{Implementation -- Custom Adaptive Runge Kutta}
+\vfill
+\subsection{Implementation -- Custom Adaptive Runge-Kutta}
 \begin{algorithm}
     \caption{Particle Movement Procedure with Adaptive Runge-Kutta Method}
     \label{alg:dsmc_movement_impl}
@@ -209,31 +145,31 @@ So finally, the complete density of states is given by
     \Procedure {MoveStep}{\Dt}
     \newcommand*{\TOL}{\ensuremath{\Delta_\text{tolerance}}\xspace}
     \State $\TOL = \num{e-7}$ \Comment{tolerance parameter}
-    \ForAll {particles $A \in$ cloud}
+    \ForAll {particles $i \in$ cloud}
     \State $t \gets 0$ \Comment{time passed}
-    \State $\Dt_\text{local} \gets \min (\classprop{A}{\delta t}, \Dt)$ \Comment{local timestep}
+    \State $\Dt_\text{local} \gets \min (\classprop{i}{\delta t}, \Dt)$ \Comment{local timestep}
     \While {$t < \Dt$}
-    \State $\{K[0], L[0]\} \gets \Dt_\text{local}\cdot \{ \Call{Force}{\classprop{A}{\vec{r}}}/m , \classprop{A}{\vec{v}}  \}$
-    \State $\{K[1], L[1]\} \gets \Dt_\text{local}\cdot \{ \Call{Force}{\classprop{A}{\vec{r}} + 0.5\cdot L[0]}/m , \classprop{A}{\vec{v}} + 0.5\cdot K[0]  \}$
-    \State $\{K[2], L[2]\} \gets \Dt_\text{local}\cdot \{ \Call{Force}{\classprop{A}{\vec{r}} + 0.5\cdot L[1]}/m , \classprop{A}{\vec{v}} + 0.5\cdot K[1]  \}$
-    \State $\{K[3], L[3]\} \gets \Dt_\text{local}\cdot \{ \Call{Force}{\classprop{A}{\vec{r}} + L[2]}/m , \classprop{A}{\vec{v}} + K[2] \}$
+    \State $\{K[0], L[0]\} \gets \Dt_\text{local}\cdot \{ \Call{Force}{\classprop{i}{\vec{r}}}/m , \classprop{i}{\vec{v}}  \}$
+    \State $\{K[1], L[1]\} \gets \Dt_\text{local}\cdot \{ \Call{Force}{\classprop{i}{\vec{r}} + 0.5\cdot L[0]}/m , \classprop{i}{\vec{v}} + 0.5\cdot K[0]  \}$
+    \State $\{K[2], L[2]\} \gets \Dt_\text{local}\cdot \{ \Call{Force}{\classprop{i}{\vec{r}} + 0.5\cdot L[1]}/m , \classprop{i}{\vec{v}} + 0.5\cdot K[1]  \}$
+    \State $\{K[3], L[3]\} \gets \Dt_\text{local}\cdot \{ \Call{Force}{\classprop{i}{\vec{r}} + L[2]}/m , \classprop{i}{\vec{v}} + K[2] \}$
     \Statex
-    \State $\vec{r}' \gets \classprop{A}{\vec{r}} + 1/6\cdot(L[0] + 2\cdot L[1] + 2\cdot L[2] + L[3])$
-    \State $\vec{v}' \gets \classprop{A}{\vec{v}} + 1/6\cdot(K[0] + 2\cdot K[1] + 2\cdot K[2] + K[3])$
+    \State $\vec{r}' \gets \classprop{i}{\vec{r}} + 1/6\cdot(L[0] + 2\cdot L[1] + 2\cdot L[2] + L[3])$
+    \State $\vec{v}' \gets \classprop{i}{\vec{v}} + 1/6\cdot(K[0] + 2\cdot K[1] + 2\cdot K[2] + K[3])$
     \Statex
-    \State $E_0 \gets m/2 \cdot (\classprop{A}{\vec{v}})^2 + \Call{Potential}{\classprop{A}{\vec{r}}}$ \Comment{total energy before}
-    \State $E \gets m/2 \cdot (\vec{v}')^2 + \Call{Potential}{\classprop{A}{\vec{r}'}}$ \Comment{total energy after}
+    \State $E_0 \gets m/2 \cdot (\classprop{i}{\vec{v}})^2 + \Call{Potential}{\classprop{i}{\vec{r}}}$ \Comment{total energy before}
+    \State $E \gets m/2 \cdot (\vec{v}')^2 + \Call{Potential}{\classprop{i}{\vec{r}'}}$ \Comment{total energy after}
     \State $\Delta E \gets$ \Ternary{$E_0 \neq 0$}{$|E-E_0|/E_0$}{$\num{0.999}\cdot \TOL$}
     \Statex
     \If {$\Delta E < \TOL$}
     \State $t \gets t + \Dt_\text{local}$ \Comment{advance the time tracker}
-    \State $\{\classprop{A}{\vec{r}}, \classprop{A}{\vec{v}}\} \gets \{\vec{r}', \vec{v}'\}$ \Comment{apply the changes in position and velocity}
+    \State $\{\classprop{i}{\vec{r}}, \classprop{i}{\vec{v}}\} \gets \{\vec{r}', \vec{v}'\}$ \Comment{apply the changes in position and velocity}
     \EndIf
     \Statex
     \State $\Dt_\text{local} \gets \Dt_\text{local}\cdot$ \Ternary{$\Delta E \neq 0$}{$0.9 \cdot (\TOL / \Delta E)^{\num{0.25}}$}{$10$}
     \Statex
     \If {$t + \Dt_\text{local} > \Dt$}
-    \State $\classprop{A}{\delta t} \gets \Dt_\text{local}$ \Comment{update local timestep of this particle}
+    \State $\classprop{i}{\delta t} \gets \Dt_\text{local}$ \Comment{update local timestep of this particle}
     \State $\Dt_\text{local} \gets \Dt - t$ \Comment{do not go beyond \Dt}
     \EndIf
     \EndWhile
@@ -241,3 +177,38 @@ So finally, the complete density of states is given by
     \EndProcedure
     \end{algorithmic}
 \end{algorithm}
+\vfill
+
+\pagebreak
+\subsection{Tests and Results -- Derivation of the Mean Scattering Rate}
+\label{sec:appendix_average}
+The mean scattering rate in a gas is given by
+\begin{equation*}
+    \langle \Gamma \rangle = \langle n \sigma \crel \rangle = \langle n \rangle \cdot \meanProb.
+\end{equation*}
+To find the value of \meanProb{}, we need to average over the Maxwell-Boltzmann distributions for both collision partners.
+\begin{align*}
+    \meanProb &= \iint \multidiff{3}{c_1} \multidiff{3}{c_2}\; \frac{8\pi a^2\crel}{1 + a^2 k^2} \times n(\vec{c}_1) n(\vec{c}_2) \\
+    &= \frac{8\pi a^2}{(2\pi m \kB T)^3}\iint \multidiff{3}{c_1} \multidiff{3}{c_2}\; \frac{\crel}{1 + a^2 k^2} \exp\!\left(-\frac{m(\vec{c}_1^2 + \vec{c}_2^2)}{2\kB T}\right) 
+    \intertext{We can now change variables to centre-of-mass and relative coordinates and integrate out the angular part}
+    &= (4\pi)^2 \frac{8\pi a^2}{(2\pi m \kB T)^3}\int_0^\infty \diff{\crel}\; \crel^2 \frac{\crel}{1 + a^2 k^2} \exp\!\left(-\frac{m\crel^2}{4\kB T}\right) \nonumber \\
+    &\phantom{=} \quad \times \int_0^\infty \diff{c_\text{COM}}\; c_\text{COM}^2 \exp\!\left(-\frac{mc_\text{COM}^2}{\kB T}\right) \\
+    &= 4\sqrt{\pi} a^2 \left(\frac{m}{\kB T}\right)^\frac{3}{2} \int_0^\infty \diff{\crel} \frac{\crel^2}{1 + a^2 \frac{m^2 \crel^2}{4\hbar^2}} \exp\!\left(-\frac{m\crel^2}{4\kB T}\right)
+    \intertext{where we have performed the integration over $c_\text{COM}$ and used the relation $k = \frac{m\crel}{2\hbar}$. Making the integral dimensionless and introducing the (also dimensionless) parameter $\chi = \sqrt{\frac{\hbar^2}{a^2 m \kB T}}$ we find}
+    &= 64\sqrt{\pi} \cdot \frac{a\hbar}{m} \cdot \chi \int_0^\infty \diff{u}\; \frac{u^3}{\chi^2 + u^2} \exp(-u^2) \\
+    &= 32\sqrt{\pi} \cdot \frac{a\hbar}{m} \cdot \chi \left(1 + \chi^2\exp(\chi^2)\text{Ei}(-\chi^2)\right)
+    \intertext{where Ei is the exponential integral \cite[Eq.~6.2.5]{NIST:DLMF}. Because $\chi^2$ can be much larger than 1, for calculation on a computer it is better to express this using the confluent hypergeometric function $U$ \cite[Eq.~13.2.6]{NIST:DLMF}:}
+    \meanProb &= 32\sqrt{\pi} \cdot \frac{a\hbar}{m} \cdot \chi \left(1 + \chi^2U(1,1,\chi^2)\right).
+\end{align*}
+
+\pagebreak
+\subsection{Tests and Results -- Evaporation Trajectories, Cases 1--4}
+\vfill
+\noindent\begin{minipage}[c]{\linewidth}
+    \centering
+    \includegraphics[]{Evap/Trajectory-Results-1}\hfill\includegraphics[]{Evap/Trajectory-Results-2.pdf} \\[\baselineskip]
+    \noindent\includegraphics[]{Evap/Trajectory-Results-3}\hfill\includegraphics[]{Evap/Trajectory-Results-4.pdf}
+    \captionof{figure}[Evaporation trajectories for the cases 1--4 defined in \cref{sec:eva_test}]{The initial and final values for the parameters shown here are listed in \cref{tab:evap_results}. The atom number and phase space density axes are logarithmic, the others linear.}
+    \label{fig:eva_cases14}
+\end{minipage}
+\vfill

@@ -1,4 +1,4 @@
-\begin{tikzpicture}
+\begin{tikzpicture}[scale=1]
     \tikzmath{\z = 3;}
     \draw (0,0) node[label={[label distance=-2*\z pt]225:{$C(0|1)$}}] (bl) {} --
     (\z,0) node[label={[label distance=-2*\z pt]315:{$D(1|1)$}}] (br) {} --
@@ -6,15 +6,15 @@
     (0,\z) node[label={[label distance=-2*\z pt]135:{$A(0|0)$}}] (tl) {} -- cycle;
     \path[name path=uDmd] ($(bl)!0.3!(br)$) -- ($(tl)!0.3!(tr)$);
     \path[name path=vDmd] ($(bl)!0.4!(tl)$) -- ($(br)!0.4!(tr)$);
-    \draw[name intersections={of=uDmd and vDmd,by={P}},densely dotted] ($(bl)!0.4!(tl)$) -- (P) node [midway,below] {$y$};
-    \draw[densely dotted] ($(tl)!0.3!(tr)$) -- (P) node [midway,right]{$x$};
+    \draw[name intersections={of=uDmd and vDmd,by={P}},densely dotted] ($(bl)!0.4!(tl)$) -- (P) node [midway,below] {$x$};
+    \draw[densely dotted] ($(tl)!0.3!(tr)$) -- (P) node [midway,right]{$y$};
     \node[label={[label distance=-3*\z pt]315:{$P(x|y)$}}] at (P) {};
 
-    \draw [->] (\z*1.25,\z/2) -- (\z*1.75,\z/2);
-    \draw (2.1*\z,0) node[label={[label distance=-2*\z pt]225:{$C'$}}] (C) {} --
-    (2*\z+1.3*\z,0) node[label={[label distance=-2*\z pt]315:{$D'$}}] (D) {} --
-    (2*\z+\z,\z*1.25) node[label={[label distance=-2*\z pt]45:{$B'$}}] (B) {} --
-    (2*\z,\z) node[label={[label distance=-2*\z pt]135:{$A'$}}] (A) {} -- cycle;
+    \draw [-{Latex[length=3mm]}] (\z*1.4,\z/2) -- (\z*2.1,\z/2);
+    \draw (2.5*\z + 0.1*\z,0) node[label={[label distance=-2*\z pt]225:{$C'$}}] (C) {} --
+    (2.5*\z+1.2*\z,0) node[label={[label distance=-2*\z pt]315:{$D'$}}] (D) {} --
+    (2.5*\z+\z,\z*1.15) node[label={[label distance=-2*\z pt]45:{$B'$}}] (B) {} --
+    (2.5*\z,\z) node[label={[label distance=-2*\z pt]135:{$A'$}}] (A) {} -- cycle;
     \path[name path=uCam] ($(C)!0.3!(D)$) -- ($(A)!0.3!(B)$);
     \path[name path=vCam] ($(C)!0.4!(A)$) -- ($(D)!0.4!(B)$);
     \draw[name intersections={of=uCam and vCam,by={Pstar}},densely dotted] ($(A)!0.3!(B)$) -- (Pstar) node [midway, right] {$y'$};

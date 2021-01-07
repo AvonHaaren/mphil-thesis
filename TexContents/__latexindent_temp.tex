@@ -1,0 +1,104 @@
+% !TEX root = ../thesis.tex
+
+
+\chapter{Implementation}
+% \label{cha:eva_implementation}
+This chapter will give explanations for the code written to simulate the evaporative cooling process. I will go into detail on the specifics of storing the data because different storage containers can have a significant performance impact. Then, I will give some details on how the simulation is initialised in regards to the random placement of generation of particles and the choice of the starting parameters that are not fixed by the user. Finally I will give an overview of the main simulation loop that handles particle motion, boundary conditions, atom loss through background and inelastic collisions as well as the main collision procedure for elastic collisions that contribute to the cooling process.
+
+All the code written for this project can be found on my GitHub\footnote{\url{github.com/AvonHaaren}}. The programming language of choice for the main simulation is \Cpp, while the analysis and plotting is done in Python. 
+%
+\section{Data Storage}
+\label{sec:eva_data_storage}
+%
+The simulated cloud of particles is stored in a \stdvector container, where each particle is characterised by
+\begin{itemize}
+    \item a 3D-vector for the position $r_i$
+    \item a 3D-vector for the velocity $v_i$
+    \item a local timestep $\delta t$ (explained in \cref{sec:particlemovement})
+    \item a unique identifier (a number) $i$
+    \item the identifier of the last particle it has collided with
+    \item the index of the DSMC cell it is currently in
+\end{itemize}
+%
+The DSMC cells are also stored as \stdvector but they contain pointers to all the particles inside them.
+The choice of the container was either a \stdvector or a double-linked list (as provided by the \Cpp standard library as \texttt{std::list}). During the simulation, items from the storage container have to be removed (whenever atoms are lost from the cloud) or added (when the particles are doubled). This would normally be the ideal use-case for a double-linked list because the process of removing and adding items has constant time-complexity. In a contiguous data storage container where all elements are stored next to each other in memory, adding elements usually means that the complete container has to be copied, which is memory-expensive and slow. However, \stdvector can be pre-allocated with a certain size, so even if elements get removed and added, as long as the size would never exceed the pre-allocated size, no copying has to be done. Item removal would also be considered a disadvantage of contiguous data storage because subsequent elements are moved to fill the gap. This might be an issue for very large containers, but in our case with only \orderof{\num{E4}} items, there is almost no benefit to using a double linked list.
+The main advantage of using contiguous data storage on the other hand is data access and as the time to iterate through the items is smaller and more elements can be kept in cache. This was the main reason for choosing an \stdvector as the data storage container.
+%
+% \section{Potentials}
+% The way potentials are implemented in this simulation is designed with future usability and expandability in mind. Any future user can write their own implementation of a potential as long as it fulfils a certain set of requirements. A potential usable for the simulation \ldots
+% \begin{itemize}
+%     \item[\ldots] implements a function that takes a 3-vector as an argument and returns the value of the potential at that position.
+%     \item[\ldots] implements a function that takes a 3-vector as an argument and returns the value of the force at that position.
+%     \item[\ldots] implements a function that takes a 3-vector as an argument and returns a boolean value that is truthy, if the position is within the boundary of that potential and falsy if it is not. E.g.\ the implementation of gravity always returns \texttt{false} because it does not have boundary conditions.
+%     \item[\ldots] \emph{optionally} implements a function that returns the volume that the bounding box of the potential contains (nothing is returned if there is no bounding box).
+% \end{itemize}
+% The box potential used in this simulation is made up of two ring beams that are crossed to form a Steinmetz solid\insertcite{}. Each of the beams is idealised as a cylinder with gaussian-like walls.
+% %
+% \begin{align} \label{eq:axicon_potential}
+%     U(\vec{r}) &= U_0 \left\{ \exp{\left[\left(\frac{|r_x - R|}{w}\right)^{-O}\right]} + \exp{\left[\left(\frac{|r_y - R|}{w}\right)^{-O}\right]} \right\}
+%     \intertext{with}
+%     r_x &= \sqrt{(y^2+z^2)} \qquad \text{and} \qquad r_y = \sqrt{(x^2+z^2)}. \nonumber
+% \end{align}
+% %
+% Here $R$ is the radius of the cylindrical beams, $w$ the thickness of the walls ($e^{-1}$ radius) and $O$ a parameter that describes how steep the wall of the potential is.
+%
+\section{Initialisation}
+Configuration settings for the simulation are read from a .json file using a third-party \Cpp library~\cite{nlohmann}. 
+The number of particles to be created initially and the starting statistic weight $W$ are determined by halving the desired atom number $N_0$ repeatedly until it falls below 4 times the threshold for doubling.
+The atomic cloud is then filled with particles according to a pre-specified spatial distribution (can be uniform or harmonic) and with velocities according to the Maxwell-Boltzmann distribution at the specified starting temperature $T_0$.
+Potentials are generated with their respective initial parameters.
+We remove any particles that were initialised outside the boundaries and double the remaining particles if necessary.
+The collisional cells are then filled once. This is done by finding the minimum and maximum values for all three coordinates which - together with the number of cells in all directions - defines a basis vector for the grid of cells (the volume of one cell $\VCell$ is then simply the product of all three coordinates of this vector). The particles can then be sorted into their corresponding cells. When this is done, the volume of the domain is calculated. We define the volume as
+\begin{align*}
+    V &= \frac{N}{\overline{n}} \\
+    &= N \frac{\sum_\text{Cells} \frac{\NCell}{\VCell}}{\sum_\text{Cells} \left(\frac{\NCell}{\VCell}\right)^2} \\
+    & = N^2\VCell \frac{1}{\sum_\text{Cells} \left(\frac{\NCell}{\VCell}\right)^2}.
+\end{align*}
+Then we loop over all possible particle pairs to find both the \maxProb and its mean value \meanProb. The initial mean collision time is then
+\begin{equation*}
+    \tau_0 = \frac{V}{N\meanProb}
+\end{equation*}
+The timestep \Dt is then a fraction of the mean collision time. Typical for our simulations are values of $\Dt \sim \num{0.01}\tau$. The last step in the initialisation is to establish \Dt as the initial value for the local timestep $\delta t$ for all particles.
+%
+\section{Main Simulation Loop}
+\textbf{Notice:} Each algorithm displayed in this section is optimised to run on as many threads as possible (with hardware limitations in mind). E.g.\ if some function is applied to each particle separately and the program is run on hardware with a maximum of 64 threads available, the cloud will be split in 64 parts and each thread can work on a different part of the cloud.
+
+\subsection{Particle Movement} \label{sec:particlemovement}
+Particle movement is done with an adaptive Runge-Kutta (RK) method. Most adaptive RK methods use two different orders to get an error estimate that is then used to adjust the stepping \cite{rungekutta}. In this case a simpler approach can be used. The total energy of each atom is calculated before and after each RK step. If the relative difference in energy is too big, the step is rejected and repeated with a smaller timestep. This is where the local timestep stored with each particle that was mentioned in \cref{sec:eva_data_storage} becomes important. In a box potential, the centre should be mostly free of external forces. Here, particles can move almost without any interaction with the surrounding potential. Near the edges, the local timestep has to be smaller as particles get de-/ and accelerated by the potential wall. It is therefore most efficient to propagate each particle with a local timestep $\delta t$, as long as every particle completes the global timestep \Dt. This adaptive Runge-Kutta method is applied to each particle in the cloud separately, which gives us the complete algorithm as shown in \cref{alg:dsmc_movement_impl}.
+
+\subsection{Boundary Conditions}
+The boundaries are set by the surrounding potential(s). The boundary conditions are checked for each particle and each potential. If any potential considers the particle as \enquote{within boundary}, it is kept, otherwise it is removed from the cloud.
+
+\subsubsection*{Updating the Parameters}
+The potential parameters as well as the loss coefficients and the scattering length can be dynamically changed during the simulation according to a preset trajectory. After the boundary conditions have been applied, all parameters are updated using the elapsed time and then we apply the boundary conditions again. The reason for this is simple: If the potential is compressed in one timestep and particles that were within the boundary before the compression are then suddenly outside, constitutes un-physical losses. If we apply the boundary conditions twice, we can monitor the amount of these un-physical losses over the duration of the simulation.
+
+\subsection{Losses}
+Inelastic collisions (background collisions as well as 2- and 3-body collisions) as described before are included in the simulation as well. From the 1-, 2-, 3-body inelastic collision rates $K_{\{1,2,3\}}$ and the atomic density $n = \frac{\NCell}{\VCell}$, the loss probability in each cell can be calculated using \cref{eq:lossrate} and the current timestep $\Dt$.
+For every particle, a random number between 0 and 1 is chosen and the particle is subsequently removed if the loss probability inside its corresponding cell is greater than this random number.
+
+After all particle losses are handled, either through boundary conditions or these other losses, the total particle number is compared to the threshold for doubling and if there are too few particles remaining, the doubling procedure is applied.
+
+\subsection{Collisions}
+For the collisions, we first need to sort the particles into their respective cells again. Then we can perform the rest of the calculation in each cell separately.
+We calculate the number of sub-cells $\NCellPrime$ to create from \cref{eq:tas_ncells} and then perform the same indexing as for the bigger cells before. We know the minimum and maximum values of the three coordinates from the index of the cell so we only have to create a $\NCellPrime \times \NCellPrime \times \NCellPrime$ grid and index all particles.
+
+The number of pairs to check for collision events is then calculated according to \cref{eq:ntc_npairs}. Depending on the number of particles per cell, this can actually be a small number or even $< 1$. To avoid rounding errors, the number of pairs selected is then increased together with the value of \maxProb. This way, the number of collisions that actually happen stays constant. As explained in \cref{sec:eva_theory_collisions}, for each pair the first collision partner is then selected at random from the whole cell and the second collision partner is chosen preferably from the same sub-cell, but other sub-cells are chosen if the first one is empty. It is also forbidden for two particles to collide with each other twice in a row. The value of $(\sigma \crel)$ for each pair is averaged and also compared with the current maximum. If a larger value is encountered, the maximum is then updated.
+
+After the collision procedure is completed for every cell, the timestep \Dt is updated, using the averaged \meanProb for a new estimate on the mean collision time.
+
+\subsection{Data Logging}
+The last step in each run is to log all interesting quantities to a file. These include \ldots 
+\begin{itemize}
+    \item[\ldots] the elapsed time $t$
+    \item[\ldots] the timestep \Dt
+    \item[\ldots] the atom number $N_\text{A} = N\cdot W$
+    \item[\ldots] the volume $V$
+    \item[\ldots] the kinetic temperature $T$ defined by the RMS velocity of all particles as $T = \frac{m\sqrt{\langle v^2\rangle}}{3\kB}$
+    \item[\ldots] the phase space density $\PSD = \frac{N}{V}\lambdadB^3$ using the thermal de Broglie wavelength \lambdadB
+    \item[\ldots] the cumulative number of atom collisions (not particle collisions) since $t=0$
+    \item[\ldots] the statistic weight $W$
+    \item[\ldots] the value of \maxProb
+    \item[\ldots] the mean free path defined by $\lambda = \frac{V\langle v\rangle}{N\meanProb}$
+    \item[\ldots] the total number of lost atoms (not particles)
+    \item[\ldots] and the value of all parameters, i.e.\ the scattering length $a$, the loss coefficients $K_{\{1,2,3\}}$ and all potential parameters     
+\end{itemize}

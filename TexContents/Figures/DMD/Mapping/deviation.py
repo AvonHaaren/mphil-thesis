@@ -5,6 +5,21 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+import json
+from pathlib import Path
+import cmocean as cmo
+
+
+colourPath = Path().home() / \
+    "Google Drive/Studium/Cambridge/thesis/TexContents/Figures/colours.json"
+with open(colourPath) as f:
+    j = json.load(f)
+    src = j["cmap_src"]
+    name = j["cmap"]
+    if src == "mpl":
+        cmap = mpl.cm.get_cmap(name)
+    elif src == "cmocean":
+        cmap = cmo.cm.cmap_d[name]
 
 mpl.use('pgf')
 pgf_with_latex = {                      # setup matplotlib to use latex output
@@ -68,20 +83,18 @@ def latexplot(filename, keeppgf=False, keeptex=False):
     return
 
 
-
 target = imageio.imread('twoshapes-target.png')
 camera = imageio.imread('twoshapes-mapped.png')
 
 
-
 t = np.asarray(target).astype(float)
-c = np.asarray(camera[:,:,1]).astype(float)
+c = np.asarray(camera[:, :, 1]).astype(float)
 
-fig = plt.figure(figsize=(5.5,3),dpi=300)
+fig = plt.figure(figsize=(5.5, 3), dpi=300)
 ax = plt.gca()
-im = ax.imshow(c-t, cmap='inferno')
-plt.tick_params(bottom=False,labelbottom=False,
-left=False,labelleft=False)
+im = ax.imshow(c-t, cmap=cmap, vmin=-255, vmax=255)
+plt.tick_params(bottom=False, labelbottom=False,
+                left=False, labelleft=False)
 
 divider = make_axes_locatable(ax)
 cax = divider.append_axes("right", size="7%", pad=0.1)
@@ -89,4 +102,3 @@ cax = divider.append_axes("right", size="7%", pad=0.1)
 plt.colorbar(im, cax=cax)
 fig.savefig("twoshapes-error.pgf", bbox_inches="tight", pad_inches=0.0)
 latexplot('twoshapes-error')
-

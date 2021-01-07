@@ -1,10 +1,10 @@
 \begin{tikzpicture}
     \node[anchor = south west, inner sep=0] (Image) at (0,0) {\includegraphics[page=2,trim=160 590 55 70,clip]{Evap/AxiconSetup/File}};
     \begin{scope} [x={(Image.south east)},y={(Image.north west)}]
-        \node[rectangle, rounded corners,draw=none,inner sep=1pt,fill=white] at (0.225,0.152) {$f=\SI{400}{mm}$};
-        \node[rectangle, rounded corners,draw=none,inner sep=1pt,fill=white] at (0.922,0.152) {\parbox{1.5cm}{\centering Image Plane}};
-        \node[rectangle, rounded corners,draw=none,inner sep=1pt,fill=white] at (0.074,0.89) {$\SI{10}{\degree}$ Axicon};
-        \node[rectangle, rounded corners,draw=none,inner sep=1pt,fill=white] at (0.27,0.89) {$\SI{10}{\degree}$ Axicon};
-        \node[rectangle, rounded corners,draw=none,inner sep=1pt,fill=white] at (0.8,0.89) {Movable $\SI{2}{\degree}$ Axicon};
+        \node[rectangle, rounded corners,draw=none,inner sep=1pt] at (0.225,0.152) {$f=\SI{400}{mm}$};
+        \node[rectangle, rounded corners,draw=none,inner sep=1pt] at (0.922,0.152) {\parbox{1.5cm}{\centering Image Plane}};
+        \node[rectangle, rounded corners,draw=none,inner sep=1pt] at (0.074,0.89) {$\SI{10}{\degree}$ Axicon};
+        \node[rectangle, rounded corners,draw=none,inner sep=1pt] at (0.27,0.89) {$\SI{10}{\degree}$ Axicon};
+        \node[rectangle, rounded corners,draw=none,inner sep=1pt] at (0.8,0.89) {Movable $\SI{2}{\degree}$ Axicon};
     \end{scope}
 \end{tikzpicture}

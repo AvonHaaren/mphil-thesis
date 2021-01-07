@@ -22,29 +22,31 @@ def latexplot(filename, keeppgf=False, keeptex=False, silent=True):
     footer = r'''
     \end{document}'''
 
-    main = r'\input{'+filename+'.pgf}'
+    main = r'\input{' + filename + '.pgf}'
 
     content = header + main + footer
 
-    with open(filename+'.tex', 'w') as f:
+    with open(filename + '.tex', 'w') as f:
         f.write(content)
 
     commandLine = subprocess.Popen([
         'pdflatex',
         '--interaction=batchmode',
-        filename+'.tex',
+        filename + '.tex',
         '>', '/dev/null'
     ]) if silent else subprocess.Popen([
         'pdflatex',
-        filename+'.tex'
+        filename + '.tex'
     ])
     commandLine.communicate()
     if keeppgf is False:
-        os.unlink(filename+'.pgf')
+        os.unlink(filename + '.pgf')
     if keeptex is False:
-        os.unlink(filename+'.tex')
-    os.unlink(filename+'.aux')
-    os.unlink(filename+'.log')
-    subprocess.run(['open', filename+'.pdf'])
+        os.unlink(filename + '.tex')
+    os.unlink(filename + '.aux')
+    # os.unlink(filename+'.log')
+
+    commandLine = subprocess.Popen(['open', filename + '.pdf'])
+    commandLine.communicate()
 
     return

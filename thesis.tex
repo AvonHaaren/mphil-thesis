@@ -1,6 +1,7 @@
-\documentclass[]{cam-thesis}
+\documentclass[captions=tableheading]{cam-thesis}
+\addtokomafont{partentrypagenumber}{\nullfont}
 
-
+\errorcontextlines=3
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Preamble
@@ -30,6 +31,7 @@
 %% Contents:
 %%
 \begin{document}
+
 \frontmatter
 
 
@@ -37,7 +39,7 @@
 %% --------       THESIS BODY:       -------- %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \mainmatter
-\pagestyle{headings}
+\pagestyle{scrheadings}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Introduction:
@@ -79,14 +81,8 @@
 \include{TexContents/15DMD-FutureWork}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Conclusion:
-%%
-% \include{TexContents/16DMD-Conclusion}
-
-
 \addtocontents{toc}{\protect\newpage}
-
+\addtocontents{lof}{\protect\newpage}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Evaporation Simulation:
 %%
@@ -128,8 +124,7 @@
 \cleardoublepage
 %\phantomsection
 %\addcontentsline{toc}{chapter}{Bibliography}
-%\bibliographystyle{plainnat}
-%\bibliography{thesis}
+\bookmarksetup{startatroot}
 \printbibliography[heading=bibintoc]
 
 
@@ -137,6 +132,7 @@
 %% Appendix:
 %%
 \appendix
+\captionsetup{list=no}
 \addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
 \include{TexContents/Appendix}
 

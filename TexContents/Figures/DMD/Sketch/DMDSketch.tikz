@@ -1,8 +1,13 @@
 \usetikzlibrary{positioning,calc,arrows}
-\tikzset{myblue/.style={color=yellow!60!white, fill=none, draw, line width=1pt, inner sep=0}}
-\tikzset{mygreen/.style={color=yellow!40!red, line width=1pt, inner sep=0cm, draw, fill=none}}
+\tikzset{myblue/.style={color=progression0!83!white, fill=none, draw, line width=1pt, inner sep=0}}
+\tikzset{mygreen/.style={color=progression4!80!white, line width=1pt, inner sep=0cm, draw, fill=none}}
+
+% \tikzset{myblue/.style={color=yellow!60!white, fill=none, draw, line width=1pt, inner sep=0}}
+% \tikzset{mygreen/.style={color=yellow!40!red, line width=1pt, inner sep=0cm, draw, fill=none}}
 \tikzset{pixel/.style={line width=0.7pt}}
-\tikzset{pixelcircle/.style={circle, mygreen,minimum size=3.5cm,fill={rgb:red,3;yellow,2;gray,4},fill opacity=0.9}}
+% \tikzset{pixelcircle/.style={circle, mygreen,minimum size=3.5cm,fill={rgb:red,3;yellow,2;gray,4},fill opacity=0.9}}
+\tikzset{pixelcircle/.style={circle, mygreen,minimum size=3.5cm,fill=progression4!80!black,fill opacity=0.9}}
+
 \begin{tikzpicture}
     \def\X{8}
     \def\Y{5}
@@ -44,8 +49,8 @@
     \draw[mygreen] (OFF) -- (OFFPixel);
 
 
-    \node[below=0.8cm] at (OFFPixel) {\small\emph{OFF} Pixel};
-    \node[below=0.8cm] at (ONPixel) {\small\emph{ON} Pixel};
+    \node[below=0.8cm,color=white] at (OFFPixel) {\small\emph{OFF} Pixel};
+    \node[below=0.8cm,color=white] at (ONPixel) {\small\emph{ON} Pixel};
 
     \begin{scope}[xshift={(\X+2.35)*1cm},yshift={(\Y-\R/1.5-0.26)*1cm}]
         \node (pixel_off) at (0,0.4) {\includegraphics[width=2.7cm]{off}};

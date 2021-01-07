@@ -1,10 +1,19 @@
 % !TEX root = ../thesis.tex
+\input{TexContents/Figures/colours}
 
+
+\usepackage{scrlayer-scrpage}
+\renewcommand*\chaptermarkformat{\chaptername\ \thechapter\autodot\enskip --\enskip}
+\automark[section]{chapter}
+
+% \rofoot*{\ifthenelse{\thepage=69}{$\underset{\text{\fontsize{5}{4}\selectfont\sffamily nice}}{69}$}{\pagemark}}
+% \lefoot*{\ifthenelse{\thepage=84}{$\underset{\scriptscriptstyle 2\cdot 42}{84}$}{\pagemark}}
 
 \addtokomafont{disposition}{\rmfamily}
 
 %% Encoding and Language
 \RequirePackage[utf8]{inputenc}
+\RequirePackage{lmodern}
 \RequirePackage[UKenglish]{babel}
 
 % Do not put a dot after Section/Chapter, nor in the figure caption.
@@ -14,13 +23,13 @@
 \KOMAoptions{listof=totoc}
 
 %% Citations using numbers
-% \RequirePackage[numbers,sort&compress]{natbib}
 \RequirePackage[
     backend=biber,
     style=numeric-comp,
     backref=true,
     sorting=none,
-    giveninits=true
+    giveninits=true,
+    maxbibnames=99
 ]{biblatex}
 \addbibresource{thesis.bib}
 
@@ -28,6 +37,7 @@
 %% Some custom packages
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}
+\RequirePackage[capitalize]{cleveref}
 \RequirePackage{xspace}
 \RequirePackage{tocbasic}
 \RequirePackage{url}
@@ -66,6 +76,8 @@
 \pgfplotsset{compat=1.15}
 \DeclareUnicodeCharacter{2212}{$-$}
 
+\RequirePackage{xpatch,ifthen}
+
 
 %% Captions: This makes captions of figures use a boldfaced small font.
 \RequirePackage[small,bf]{caption}
@@ -74,6 +86,27 @@
 %% Subfigure (note: this must be included after the `caption` package).
 \RequirePackage{subcaption} % maybe replace with subcaption
 
+
+%% I want the optional argument to the \caption to be the first sentence in the caption
+%% -> \caption[Hello]{Main Text} -- Figure X.X: (bold): Hello. Main Text
+%% The regexpatch package would be ideal -> only one xpatchcmd necessary. But it is incompatible with scrhack
+%% caption@@caption has three occurrences of '#3' -> two placeholders necessary
+%% If no optional argument is given, #2 and #3 will be equal (comparison needs detokenize)
+%% Then, the main text of the caption will be output as normal
+\makeatletter
+\xpatchcmd{\caption@@caption}{#3}{PLACEHOLDER1}{}{\ddt}
+\xpatchcmd{\caption@@caption}{#3}{PLACEHOLDER2}{}{\ddt}
+\xpatchcmd{\caption@@caption}{#3}{\ifthenelse{\equal{\detokenize{#2}}{\detokenize{#3\relax}}}{#2}{\textbf{#2.} #3}}{}{\ddt}
+\xpatchcmd{\caption@@caption}{PLACEHOLDER2}{\ifthenelse{\equal{\detokenize{#2}}{\detokenize{#3\relax}}}{#2}{\textbf{#2.} #3}}{}{\ddt}
+\xpatchcmd{\caption@@caption}{PLACEHOLDER1}{\ifthenelse{\equal{\detokenize{#2}}{\detokenize{#3\relax}}}{#2}{\textbf{#2.} #3}}{}{\ddt}
+\makeatother
+
+
+%% Separate List of Figures py parts
+\xapptocmd\addparttocentry{%
+  \addxcontentsline{lof}{part}[{#1}]{#2}% copy the part entry to LOF
+  \addxcontentsline{lot}{part}[{#1}]{#2}% copy the part entry to LOT
+}{}{\PatchFailed}
 
 %% Graphics (we set the central folder for all included graphics to
 %% `./Figures/`)
@@ -93,6 +126,7 @@
 \usetikzlibrary{math}
 \usetikzlibrary{calc}
 \usetikzlibrary{intersections}
+\usetikzlibrary{arrows.meta}
 
 \RequirePackage{scrhack}
 
@@ -123,13 +157,17 @@
 \newcommand*{\crel}{\ensuremath{c_\text{r}}\xspace}
 \newcommand*{\Vcell}{\ensuremath{V_\text{C}}\xspace}
 \newcommand*{\Dt}{\ensuremath{\Delta t}\xspace}
-\newcommand*{\Kn}{\ensuremath{\text{Kn}}\xspace}
+\newcommand*{\Kn}{\ensuremath{\mathit{K\kern-0.21em n}}\xspace}
 \newcommand*{\maxProb}{\ensuremath{(\sigma\crel)_\text{max}}\xspace}
 \newcommand*{\meanProb}{\ensuremath{\langle\sigma\crel\rangle}\xspace}
 \newcommand*{\cCOM}{\ensuremath{\vec{c}_\text{COM}}\xspace}
 \newcommand*{\Rcoll}{\ensuremath{\Gamma}\xspace}
 
-\newcommand{\Rplus}{\protect\hspace{-.1em}\protect\raisebox{.35ex}{\smaller{\smaller\textbf{+}}}}
+\newcommand*{\NCell}{\ensuremath{N_\text{C}}\xspace}
+\newcommand*{\VCell}{\ensuremath{V_\text{C}}\xspace}
+\newcommand*{\NCellPrime}{\ensuremath{N'_\text{C}}\xspace}
+
+\newcommand{\Rplus}{\protect\hspace{-.02em}\protect\raisebox{.35ex}{\smaller{\smaller\textbf{+}}}}
 \newcommand{\Cpp}{\mbox{C\Rplus\Rplus}\xspace}
 
 \newcommand*{\stdvector}{\texttt{std::vector}\xspace}
@@ -139,6 +177,8 @@
 \newcommand*{\diff}[1]{\ensuremath{\text{d}#1}\xspace}
 \newcommand*{\multidiff}[2]{\ensuremath{\text{d}^{#1}#2}\xspace}
 \newcommand*{\kB}{\ensuremath{k_\text{B}\xspace}}
+
+\newcommand*{\euler}{\ensuremath{\text{e}}}
 
 
 % \newcommand*{\classprop}[2]{\ensuremath{\left( #1 \! \rightarrow \! #2 \right)}\xspace}
@@ -162,3 +202,9 @@
 
 
 \DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+% \RedeclareSectionCommand[
+%   %runin=false,
+%   afterindent=false,
+%   beforeskip=.5\baselineskip,
+%   afterskip=.25\baselineskip]{subsubsection}

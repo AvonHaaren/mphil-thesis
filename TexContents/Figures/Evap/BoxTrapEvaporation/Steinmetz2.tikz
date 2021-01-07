@@ -1,0 +1,10 @@
+\usetikzlibrary{arrows,positioning}
+\begin{tikzpicture}
+    \node[anchor=south west] (image) at (0,0) {\includegraphics[height=5cm,trim=50 100 470 420,clip]{Evap/BoxTrapEvaporation/SteinmetzAngleEdit}};
+    \begin{scope}[x={(image.south east)},y={(image.north west)}]
+        \coordinate (Start) at (0.07,0.097){};
+        \draw[-latex] (Start) -- (0.383,0.0445) node [below] {$x$};
+        \draw[-latex] (Start) -- (0.207,0.238) node [above] {$y$};
+        \draw[-latex] (Start) -- (0.0543,0.3175) node [left] {$z$};
+    \end{scope}
+\end{tikzpicture}

@@ -1,9 +1,10 @@
 \usetikzlibrary{positioning,calc,math,arrows}
 \tikzset{mynode/.style={rectangle,rounded corners,draw=gray,inner sep=9pt,line width=0.6pt}}
 \tikzset{arr/.style={-latex,color=green!25!gray}}
+\tikzset{arr/.style={-latex,color=progression1}}
 \begin{tikzpicture}
     \node[] (start) at (0,0) {Start};
-    \tikzmath{\D=0.5;}
+    \tikzmath{\D=0.6;}
     \node[mynode,below=\D cm of start] (init) {\parbox{2.6cm}{\centering Initialisation {\footnotesize {Particle creation}}}};
 
     \node[mynode,below=\D cm of init] (move) {\parbox{3.5cm}{\centering Move particles {\footnotesize {Energy Conversation}}}};

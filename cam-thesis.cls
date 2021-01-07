@@ -138,10 +138,12 @@
         pdfpagelabels=true,
         colorlinks=false,
         pdfborder={0 0 0},
-        pdfusetitle=true
+        pdfusetitle=true,
+        bookmarksdepth=section
     ]{hyperref}
 \fi
 \RequirePackage[all]{hypcap}        % Fixes links to floats (must be included after hyperref).
+\RequirePackage{bookmark}
 
 % Create the index
 \ifcam@index
@@ -203,7 +205,8 @@
 \setlength{\marginparsep}{3mm}
 
 % Vertical spacing
-\setlength{\headheight}{5mm}      % The height of the box where the heading text lives
+\setlength{\headheight}{18pt}      % The height of the box where the heading text lives -- default 5mm
+\setlength{\footheight}{19.6pt}
 \setlength{\headsep}{5mm}         % The distance between the heading and the top of the text
 \setlength{\topmargin}{\cam@topmargin-\headheight-\headsep-1in} % Counter the LaTeX 1in margin
 
@@ -213,7 +216,7 @@
 \ifcam@techreport
 \cam@calcpaperdims{25mm}{25mm}{20mm}{20mm}
 \else
-\cam@calcpaperdims{30mm}{20mm}{20mm}{20mm}
+\cam@calcpaperdims{30mm}{20mm}{25mm}{20mm}
 \fi
 
 
@@ -260,7 +263,7 @@
   %\MakeUppercase{\Large\chapapp}\enskip\chapternumbersize\thechapter\\
 \hrulefill\\[-.25ex]
 }
-\renewcommand*{\chapterheadstartvskip}{\vskip 4\baselineskip}
+\renewcommand*{\chapterheadstartvskip}{\vskip \dimexpr 4\baselineskip -\cam@topmargin +20mm\relax}
 \renewcommand*{\chapterheadendvskip}{%
   \vspace{-\baselineskip}\noindent{\setlength{\parskip}{0pt}\Huge\hrulefill\par}
   \vspace{\baselineskip}
@@ -428,7 +431,7 @@ for the degree of Doctor of Philosophy%
 \ifcam@collegeshield%
     \newsavebox{\cam@collegeshieldbox}
     \begin{lrbox}{\cam@collegeshieldbox}
-    \includegraphics[height=20mm]{\@collegeshield}
+    \includegraphics[height=30mm]{\@collegeshield}
     \end{lrbox}
 \fi
 
@@ -452,7 +455,7 @@ for the degree of Doctor of Philosophy%
         \ifcam@collegeshield%
             \vspace{2mm}{\usebox{\cam@collegeshieldbox}}\\
         \fi
-        \@college{}
+        % \@college{}
         \end{center}
     \end{minipage}
 \end{lrbox}
