@@ -10,6 +10,8 @@
 *.ist
 *.log
 *.out
+*.loa
+*.tdo
 thesis.pdf
 **/test*.tex
 **/test*.pdf
